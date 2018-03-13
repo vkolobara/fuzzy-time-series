@@ -16,7 +16,7 @@ add_subdirectory(lib/fuzzy-inference-system)
 add_executable(fuzzy-time-series ${SOURCE_FILES})
 
 target_include_directories(fuzzy-time-series PRIVATE lib/ECF)
-target_include_directories(fuzzy-time-series PRIVATE lib/FIS)
+target_include_directories(fuzzy-time-series PRIVATE lib/fuzzy-inference-system)
 target_include_directories(fuzzy-time-series PRIVATE ${Boost_INCLUDE_DIR})
 
 target_link_libraries(fuzzy-time-series ECF)

@@ -6,10 +6,15 @@
 #define FUZZY_TIME_SERIES_FTSEVALOP_H
 
 #include <ECF/ECF.h>
+#include "FIS/parser/VariableParser.h"
 
 class FTSEvalOp : public EvaluateOp {
+private:
+    VariableParser* variableParser;
 public:
-    FitnessP evaluate(IndividualP individual);
+    FitnessP evaluate(IndividualP individual) override;
+    void registerParameters(StateP) override;
+    bool initialize(StateP) override;
 };
 typedef boost::shared_ptr<FTSEvalOp> FTSEvalOpP;
 

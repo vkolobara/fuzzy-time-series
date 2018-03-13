@@ -17,3 +17,12 @@ FitnessP FTSEvalOp::evaluate(IndividualP individual) {
 
     return fitness;
 }
+
+void FTSEvalOp::registerParameters(StateP state) {
+    //register entry langvar for file with Language Variable definition
+}
+
+bool FTSEvalOp::initialize(StateP state) {
+    //get registered entry and parse the file with LanguageVariablesParser
+    return true;
+}

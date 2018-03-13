@@ -12,7 +12,6 @@
 		</FloatingPoint>
 	</Genotype>
 	<Registry>
-		<Entry key="function">1</Entry>
 		<Entry key="population.size">500</Entry>
 		<Entry key="mutation.indprob">0.3</Entry>
 		<Entry key="term.maxgen">500</Entry>
