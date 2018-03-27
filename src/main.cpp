@@ -11,6 +11,7 @@ int main(int argc, char **argv) {
     state->setEvalOp(new FTSEvalOp);
 
     state->initialize(argc, argv);
+
     state->run();
 
     return 0;

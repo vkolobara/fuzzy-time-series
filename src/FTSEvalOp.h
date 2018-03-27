@@ -7,10 +7,19 @@
 
 #include <ECF/ECF.h>
 #include "FIS/parser/VariableParser.h"
+#include "dataset/Dataset.h"
+#include "FIS/inference/Defuzzifier.h"
+#include "FIS/inference/InferenceSystem.h"
 
 class FTSEvalOp : public EvaluateOp {
 private:
     VariableParser* variableParser;
+    Dataset* dataset;
+    vector<std::string> variableNames;
+    Defuzzifier* defuzzifier;
+
+    MamdaniInferenceSystem genotypeToInferenceSystem(IndividualP individual);
+
 public:
     FitnessP evaluate(IndividualP individual) override;
     void registerParameters(StateP) override;
