@@ -14,15 +14,14 @@ FitnessP FTSEvalOp::evaluate(IndividualP individual) {
 
     auto fis = genotypeToInferenceSystem(individual);
 
-    FuzzyInput* input = new FuzzyInput(variableParser->getInputNames());
+    auto input = make_shared<FuzzyInput>(variableParser->getInputNames());
 
     for (auto entry : dataset->dataset) {
-        cout << "ENTRY: " << entry->values[0] << ", " << entry->values[1] << endl;
         for (unsigned int i = 0; i<entry->values.size()-1; i++) {
-            input->setValue(variableParser->getInputNames()[i], new DomainElement({entry->values[i]}));
+            input->setValue(variableParser->getInputNames()[i], entry->values[i]);
         }
 
-        auto outValue = fis.getConclusion(input);
+        auto outValue = fis->getConclusion(input);
 
         fitnessVal += pow(outValue - entry->values.back(), 2);
     }
@@ -57,7 +56,7 @@ bool FTSEvalOp::initialize(StateP state) {
     voidP sptr = state->getRegistry()->getEntry("fuzzy.langvars"); // get parameter value
     string filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
 
-    this->variableParser = new VariableParser();
+    this->variableParser = make_shared<VariableParser>();
     this->variableParser->parse(filePath);
 
     for (auto var : variableParser->getInputNames()) {
@@ -67,25 +66,25 @@ bool FTSEvalOp::initialize(StateP state) {
     sptr = state->getRegistry()->getEntry("data.input"); // get parameter value
     filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
 
-    this->dataset = Dataset::parseFile(filePath);
-    this->defuzzifier = new COADefuzzifier();
+    this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
+    this->defuzzifier = make_shared<COADefuzzifier>();
 
     return true;
 }
 
-MamdaniInferenceSystem FTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
+shared_ptr<MamdaniInferenceSystem> FTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
 
     auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
 
     // num rules
-    vector<Rule> rules(5);
+    vector<shared_ptr<Rule>> rules;
 
     for (unsigned int i = 0; i<5; i++) {
         auto outputVar = variableParser->getOuputVariable("perc_out");
         // i * num_lang_vars + (num_lang_vars - 1)
         auto termName = outputVar->getTermNames()[(int)genotype->realValue[i*2+1]];
 
-        vector<Clause*> clauses;
+        vector<shared_ptr<Clause>> clauses;
 
         // num rules
         for (unsigned int j = 0; j<1; j++) {
@@ -93,13 +92,13 @@ MamdaniInferenceSystem FTSEvalOp::genotypeToInferenceSystem(IndividualP individu
             auto name = var->getTermNames()[genotype->realValue[i*2 + j]];
             auto term = var->getLanguageTerm(name);
 
-            clauses.push_back(new SimpleClause(term, var));
+            clauses.push_back(make_shared<SimpleClause>(term, var));
         }
 
-        Clause* antecedent = new AndClause(clauses);
-        FuzzySet* consequense = outputVar->getMeaning(termName);
-        rules[i] = Rule(antecedent, consequense, new Zadeh::TNorm());
+        auto antecedent = make_shared<AndClause>(clauses);
+        auto consequense = outputVar->getMeaning(termName);
+        rules.push_back(make_shared<Rule>(antecedent, consequense, make_shared<Zadeh::TNorm>()));
     }
 
-    return MamdaniInferenceSystem(rules, new Zadeh::SNorm(), defuzzifier);
+    return make_shared<MamdaniInferenceSystem>(rules, make_shared<Zadeh::SNorm>(), defuzzifier);
 }

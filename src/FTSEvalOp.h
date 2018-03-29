@@ -13,12 +13,12 @@
 
 class FTSEvalOp : public EvaluateOp {
 private:
-    VariableParser* variableParser;
-    Dataset* dataset;
+    shared_ptr<VariableParser> variableParser;
+    shared_ptr<Dataset> dataset;
     vector<std::string> variableNames;
-    Defuzzifier* defuzzifier;
+    shared_ptr<Defuzzifier> defuzzifier;
 
-    MamdaniInferenceSystem genotypeToInferenceSystem(IndividualP individual);
+    shared_ptr<MamdaniInferenceSystem> genotypeToInferenceSystem(IndividualP individual);
 
 public:
     FitnessP evaluate(IndividualP individual) override;
