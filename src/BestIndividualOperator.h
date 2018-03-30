@@ -1,0 +1,14 @@
+//
+// Created by vkolobara on 3/30/18.
+//
+
+#ifndef FUZZY_TIME_SERIES_BESTINDIVIDUALOPERATOR_H
+#define FUZZY_TIME_SERIES_BESTINDIVIDUALOPERATOR_H
+
+
+class BestIndividualOperator {
+
+};
+
+
+#endif //FUZZY_TIME_SERIES_BESTINDIVIDUALOPERATOR_H
