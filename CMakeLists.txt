@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
         src/main.cpp
-        src/FTSEvalOp.cpp src/FTSEvalOp.h src/dataset/Dataset.cpp src/dataset/Dataset.h src/dataset/DataRow.cpp src/dataset/DataRow.h)
+        src/FTSEvalOp.cpp src/FTSEvalOp.h src/dataset/Dataset.cpp src/dataset/Dataset.h src/dataset/DataRow.cpp src/dataset/DataRow.h src/BestIndividualOperator.cpp src/BestIndividualOperator.h)
 
 add_subdirectory(lib/ECF)
 add_subdirectory(lib/fuzzy-inference-system)

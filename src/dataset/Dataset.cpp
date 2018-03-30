@@ -24,3 +24,11 @@ Dataset* Dataset::parseFile(string filePath) {
 }
 
 Dataset::Dataset(const vector<DataRow*> &dataset) : dataset(dataset) {}
+
+uint Dataset::getNumColumns() {
+    return dataset[0]->getNumColumns();
+}
+
+uint Dataset::getNumRows() {
+    return dataset.size();
+}

@@ -12,18 +12,20 @@
 #include "FIS/inference/InferenceSystem.h"
 
 class FTSEvalOp : public EvaluateOp {
-private:
+public:
     shared_ptr<VariableParser> variableParser;
     shared_ptr<Dataset> dataset;
     vector<std::string> variableNames;
     shared_ptr<Defuzzifier> defuzzifier;
 
-    shared_ptr<MamdaniInferenceSystem> genotypeToInferenceSystem(IndividualP individual);
+    uint numRules;
 
 public:
     FitnessP evaluate(IndividualP individual) override;
     void registerParameters(StateP) override;
     bool initialize(StateP) override;
+    shared_ptr<MamdaniInferenceSystem> genotypeToInferenceSystem(IndividualP individual);
+
 };
 typedef boost::shared_ptr<FTSEvalOp> FTSEvalOpP;
 

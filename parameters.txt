@@ -8,14 +8,14 @@
 		<FloatingPoint>
 			<Entry key="lbound">0</Entry>
 			<Entry key="ubound">3</Entry>
-			<Entry key="dimension">10</Entry>
+			<Entry key="dimension">6</Entry>
 		</FloatingPoint>
 	</Genotype>
 	<Registry>
 	    <Entry key="data.input">data/pigs_perc.csv</Entry>
 	    <Entry key="fuzzy.langvars">pigs.conf</Entry>
-	    <Entry key="fuzzy.numrules">5</Entry>
-		<Entry key="population.size">5</Entry>
+	    <Entry key="fuzzy.numrules">3</Entry>
+		<Entry key="population.size">30</Entry>
 		<Entry key="mutation.indprob">0.3</Entry>
 		<Entry key="term.maxgen">20</Entry>
 		<Entry key="term.eval">100000</Entry>

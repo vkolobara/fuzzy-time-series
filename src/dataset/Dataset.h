@@ -17,6 +17,9 @@ struct Dataset {
     explicit Dataset(const vector<DataRow*> &dataset);
 
     static Dataset* parseFile(string filePath);
+
+    uint getNumRows();
+    uint getNumColumns();
 };
 
 

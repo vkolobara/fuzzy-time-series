@@ -18,3 +18,7 @@ DataRow* DataRow::parseLine(std::string line) {
 
     return new DataRow(elements);
 }
+
+uint DataRow::getNumColumns() {
+    return values.size();
+}

@@ -6,9 +6,14 @@
 #define FUZZY_TIME_SERIES_BESTINDIVIDUALOPERATOR_H
 
 
-class BestIndividualOperator {
+#include <ECF/ECF.h>
 
+class BestIndividualOperator : public Operator {
+
+    bool operate(StateP state) override;
 };
+
+typedef boost::shared_ptr<BestIndividualOperator> BestIndividualOperatorP;
 
 
 #endif //FUZZY_TIME_SERIES_BESTINDIVIDUALOPERATOR_H

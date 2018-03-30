@@ -9,11 +9,11 @@
 #include <vector>
 #include <string>
 
-class DataRow {
-public:
+struct DataRow {
     std::vector<double> values;
     explicit DataRow(const std::vector<double> &values);
     static DataRow* parseLine(std::string line);
+    uint getNumColumns();
 };
 
 

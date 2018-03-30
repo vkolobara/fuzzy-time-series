@@ -5,7 +5,7 @@
 #include <FIS/inference/Rule.h>
 #include <FIS/inference/InferenceSystem.h>
 #include "FTSEvalOp.h"
-#include "math.h"
+#include <cmath>
 
 FitnessP FTSEvalOp::evaluate(IndividualP individual) {
     FitnessP fitness (new FitnessMin);
@@ -37,6 +37,10 @@ void FTSEvalOp::registerParameters(StateP state) {
 
     //register entry data.input for the data file
     state->getRegistry()->registerEntry("data.input", (voidP) (new std::string), ECF::STRING);
+
+
+    //register entry fuzzy.numrules for the number of rules
+    state->getRegistry()->registerEntry("fuzzy.numrules", (voidP) (new uint(1)), ECF::UINT);
 }
 
 bool FTSEvalOp::initialize(StateP state) {
@@ -50,6 +54,12 @@ bool FTSEvalOp::initialize(StateP state) {
     //get registered entry and parse the file with LanguageVariablesParser
     if(!state->getRegistry()->isModified("data.input")) {
         ECF_LOG_ERROR(state, "Error: no input data file defined! (parameter 'data.input'");
+        return false;
+    }
+
+    //get registered entry and parse the file with LanguageVariablesParser
+    if(!state->getRegistry()->isModified("fuzzy.numrules")) {
+        ECF_LOG_ERROR(state, "Error: no number of rules defined! (parameter 'fuzzy.numrules'");
         return false;
     }
 
@@ -69,6 +79,9 @@ bool FTSEvalOp::initialize(StateP state) {
     this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
     this->defuzzifier = make_shared<COADefuzzifier>();
 
+    sptr = state->getRegistry()->getEntry("fuzzy.numrules");
+    this->numRules = *((uint*) sptr.get());
+
     return true;
 }
 
@@ -79,14 +92,14 @@ shared_ptr<MamdaniInferenceSystem> FTSEvalOp::genotypeToInferenceSystem(Individu
     // num rules
     vector<shared_ptr<Rule>> rules;
 
-    for (unsigned int i = 0; i<5; i++) {
+    for (unsigned int i = 0; i<numRules; i++) {
         auto outputVar = variableParser->getOuputVariable("perc_out");
         // i * num_lang_vars + (num_lang_vars - 1)
         auto termName = outputVar->getTermNames()[(int)genotype->realValue[i*2+1]];
 
         vector<shared_ptr<Clause>> clauses;
 
-        // num rules
+        // num clauses
         for (unsigned int j = 0; j<1; j++) {
             auto var = variableParser->getInputVariable(variableNames[j]);
             auto name = var->getTermNames()[genotype->realValue[i*2 + j]];
