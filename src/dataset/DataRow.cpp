@@ -8,7 +8,7 @@
 DataRow::DataRow(const std::vector<double> &values) : values(values) {}
 
 DataRow* DataRow::parseLine(std::string line) {
-    vector<string> lineSplit = split(std::move(line), ",");
+    vector<string> lineSplit = splitString(std::move(line), ",");
 
     vector<double> elements(lineSplit.size());
 
@@ -19,6 +19,6 @@ DataRow* DataRow::parseLine(std::string line) {
     return new DataRow(elements);
 }
 
-uint DataRow::getNumColumns() {
+unsigned int DataRow::getNumColumns() {
     return values.size();
 }

@@ -13,7 +13,7 @@ struct DataRow {
     std::vector<double> values;
     explicit DataRow(const std::vector<double> &values);
     static DataRow* parseLine(std::string line);
-    uint getNumColumns();
+    unsigned int getNumColumns();
 };
 
 

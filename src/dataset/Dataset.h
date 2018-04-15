@@ -18,8 +18,8 @@ struct Dataset {
 
     static Dataset* parseFile(string filePath);
 
-    uint getNumRows();
-    uint getNumColumns();
+    unsigned int getNumRows();
+    unsigned int getNumColumns();
 };
 
 

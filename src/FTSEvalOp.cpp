@@ -2,32 +2,28 @@
 // Created by Vinko Kolobara on 11. 3. 2018..
 //
 
-#include <FIS/inference/Rule.h>
-#include <FIS/inference/InferenceSystem.h>
 #include "FTSEvalOp.h"
-#include <cmath>
 
 FitnessP FTSEvalOp::evaluate(IndividualP individual) {
     FitnessP fitness (new FitnessMin);
 
     double fitnessVal = 0.0;
 
-    auto fis = genotypeToInferenceSystem(individual);
+    auto inferenceSystem = genotypeToInferenceSystem(individual);
 
-    auto input = make_shared<FuzzyInput>(variableParser->getInputNames());
-
-    for (auto entry : dataset->dataset) {
-        for (unsigned int i = 0; i<entry->values.size()-1; i++) {
-            input->setValue(variableParser->getInputNames()[i], entry->values[i]);
+    for (auto row : dataset->dataset) {
+        for (auto i = 0; i < row->values.size()-1; i++) {
+            inferenceSystem->getVariable(i)->value = row->values.at(i);
         }
 
-        auto outValue = fis->getConclusion(input);
+        double conclusion = inferenceSystem->getConclusion(this->defuzzifier);
 
-        fitnessVal += pow(outValue - entry->values.back(), 2);
+        fitnessVal += pow(conclusion - row->values.back(), 2);
     }
 
-    fitness->setValue(fitnessVal/dataset->dataset.size());
+    delete inferenceSystem;
 
+    fitness->setValue(fitnessVal/dataset->getNumRows());
     return fitness;
 }
 
@@ -37,7 +33,6 @@ void FTSEvalOp::registerParameters(StateP state) {
 
     //register entry data.input for the data file
     state->getRegistry()->registerEntry("data.input", (voidP) (new std::string), ECF::STRING);
-
 
     //register entry fuzzy.numrules for the number of rules
     state->getRegistry()->registerEntry("fuzzy.numrules", (voidP) (new uint(1)), ECF::UINT);
@@ -66,52 +61,66 @@ bool FTSEvalOp::initialize(StateP state) {
     voidP sptr = state->getRegistry()->getEntry("fuzzy.langvars"); // get parameter value
     string filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
 
-    this->variableParser = make_shared<VariableParser>();
-    this->variableParser->parse(filePath);
+    std::ifstream t(filePath);
+    std::stringstream buffer;
+    buffer << t.rdbuf();
 
-    for (auto var : variableParser->getInputNames()) {
-        variableNames.push_back(var);
-    }
+    this->variableParser = new VariableParser();
+    this->variableParser->parse(buffer.str());
 
     sptr = state->getRegistry()->getEntry("data.input"); // get parameter value
     filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
 
-    this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
-    this->defuzzifier = make_shared<COADefuzzifier>();
+    this->dataset = Dataset::parseFile(filePath);
+    this->defuzzifier = new COADefuzzifier();
 
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
     this->numRules = *((uint*) sptr.get());
 
+    // Always expecting to receive one output variable
+    this->numVars = variableParser->inputVariables.size() + 1;
+
+    //state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numRules * this->numVars));
+
     return true;
 }
 
-shared_ptr<MamdaniInferenceSystem> FTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
-
+InferenceSystem* FTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
     auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
 
-    // num rules
-    vector<shared_ptr<Rule>> rules;
+    auto inferenceSystem = new InferenceSystem(new Zadeh::SNorm());
 
-    for (unsigned int i = 0; i<numRules; i++) {
-        auto outputVar = variableParser->getOuputVariable("perc_out");
-        // i * num_lang_vars + (num_lang_vars - 1)
-        auto termName = outputVar->getTermNames()[(int)genotype->realValue[i*2+1]];
+    vector<LanguageVariable*> variableCopies;
 
-        vector<shared_ptr<Clause>> clauses;
+    for (auto i = 0; i < this->numVars-1; i++) {
+        auto var = this->variableParser->inputVariables.at(i)->clone();
+        variableCopies.push_back(var);
+        inferenceSystem->addVariable(var);
+    }
+    auto var = this->variableParser->outputVariables.front()->clone();
+    variableCopies.push_back(var);
+    inferenceSystem->addVariable(var);
 
-        // num clauses
-        for (unsigned int j = 0; j<1; j++) {
-            auto var = variableParser->getInputVariable(variableNames[j]);
-            auto name = var->getTermNames()[genotype->realValue[i*2 + j]];
-            auto term = var->getLanguageTerm(name);
+    for (auto i = 0; i<this->numRules; i++) {
+        auto antecedent = new Antecedent(new Zadeh::TNorm());
 
-            clauses.push_back(make_shared<SimpleClause>(term, var));
+        for (auto j =0; j<this->numVars-1; j++) {
+            auto var = variableCopies.at(j);
+            auto term = var->terms.at((uint)genotype->realValue[i * this->numRules + j]);
+
+            antecedent->addClause(new Clause(var, term));
         }
 
-        auto antecedent = make_shared<AndClause>(clauses);
-        auto consequense = outputVar->getMeaning(termName);
-        rules.push_back(make_shared<Rule>(antecedent, consequense, make_shared<Zadeh::TNorm>()));
+        auto var = variableCopies.back();
+        auto term = var->terms.at((uint)genotype->realValue[(i+1)*(this->numRules)]);
+
+        auto consequent = new Clause(var, term);
+
+        auto rule = new Rule(antecedent, consequent);
+
+        inferenceSystem->addRule(rule);
     }
 
-    return make_shared<MamdaniInferenceSystem>(rules, make_shared<Zadeh::SNorm>(), defuzzifier);
+    return inferenceSystem;
+
 }

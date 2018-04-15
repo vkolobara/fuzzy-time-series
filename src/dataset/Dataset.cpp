@@ -25,10 +25,10 @@ Dataset* Dataset::parseFile(string filePath) {
 
 Dataset::Dataset(const vector<DataRow*> &dataset) : dataset(dataset) {}
 
-uint Dataset::getNumColumns() {
+unsigned int Dataset::getNumColumns() {
     return dataset[0]->getNumColumns();
 }
 
-uint Dataset::getNumRows() {
+unsigned int Dataset::getNumRows() {
     return dataset.size();
 }
