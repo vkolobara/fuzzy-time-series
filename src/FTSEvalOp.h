@@ -6,17 +6,16 @@
 #define FUZZY_TIME_SERIES_FTSEVALOP_H
 
 #include <ECF/ECF.h>
-#include <FIS/rule/Defuzzifier.h>
 #include <FIS/rule/InferenceSystem.h>
 #include "FIS/parser/VariableParser.h"
 #include "dataset/Dataset.h"
 
 class FTSEvalOp : public EvaluateOp {
 public:
-    VariableParser* variableParser;
-    Dataset* dataset;
+    shared_ptr<VariableParser> variableParser;
+    shared_ptr<Dataset> dataset;
     vector<std::string> variableNames;
-    Defuzzifier* defuzzifier;
+    shared_ptr<KnowledgeBase> knowledgeBase;
 
     uint numRules;
     uint numVars;
@@ -25,7 +24,8 @@ public:
     FitnessP evaluate(IndividualP individual) override;
     void registerParameters(StateP) override;
     bool initialize(StateP) override;
-    InferenceSystem* genotypeToInferenceSystem(IndividualP individual);
+    shared_ptr<InferenceSystem> genotypeToInferenceSystem(IndividualP individual);
+    shared_ptr<Rule> genotypeToRule(IndividualP individual);
 
 };
 typedef boost::shared_ptr<FTSEvalOp> FTSEvalOpP;

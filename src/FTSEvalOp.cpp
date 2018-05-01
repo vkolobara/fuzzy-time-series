@@ -3,27 +3,44 @@
 //
 
 #include "FTSEvalOp.h"
+#include <memory>
 
 FitnessP FTSEvalOp::evaluate(IndividualP individual) {
     FitnessP fitness (new FitnessMin);
 
     double fitnessVal = 0.0;
 
-    auto inferenceSystem = genotypeToInferenceSystem(individual);
+    auto rule = genotypeToRule(individual);
 
-    for (auto row : dataset->dataset) {
+    for (auto row : dataset.get()->dataset) {
         for (auto i = 0; i < row->values.size()-1; i++) {
-            inferenceSystem->getVariable(i)->value = row->values.at(i);
+           knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
         }
 
-        double conclusion = inferenceSystem->getConclusion(this->defuzzifier);
+        double activation = rule->antecedent.get()->getActivation();
+        shared_ptr<FuzzyConsequent> consequent = rule->consequent;
+        auto term = consequent->clause->languageVariable->getTerm(consequent->clause->termIndex);
+
+
+        double sumX = 0;
+        double sum = 0;
+
+        double min = consequent->clause->languageVariable->min;
+        double max = consequent->clause->languageVariable->max;
+        double step = consequent->clause->languageVariable->step;
+
+
+        for (auto i = min; i<=max; i+=step) {
+            sumX += activation * term->membership(i);
+            sum += term->membership(i);
+        }
+
+        double conclusion = sumX/sum;
 
         fitnessVal += pow(conclusion - row->values.back(), 2);
     }
 
-    delete inferenceSystem;
-
-    fitness->setValue(fitnessVal/dataset->getNumRows());
+    fitness->setValue(fitnessVal/dataset.get()->getNumRows());
     return fitness;
 }
 
@@ -65,62 +82,69 @@ bool FTSEvalOp::initialize(StateP state) {
     std::stringstream buffer;
     buffer << t.rdbuf();
 
-    this->variableParser = new VariableParser();
-    this->variableParser->parse(buffer.str());
+    this->variableParser = std::make_unique<VariableParser>();
+    this->variableParser.get()->parse(buffer.str());
 
     sptr = state->getRegistry()->getEntry("data.input"); // get parameter value
     filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
 
     this->dataset = Dataset::parseFile(filePath);
-    this->defuzzifier = new COADefuzzifier();
 
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
     this->numRules = *((uint*) sptr.get());
 
-    // Always expecting to receive one output variable
-    this->numVars = variableParser->inputVariables.size() + 1;
+    this->numVars = variableParser.get()->inputVariables.size()+1;
 
-    //state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numRules * this->numVars));
+    state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numVars));
+    state->getPopulation()->initialize(state);
 
     return true;
 }
 
-InferenceSystem* FTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
+shared_ptr<InferenceSystem> FTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
     auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
 
-    auto inferenceSystem = new InferenceSystem(new Zadeh::SNorm());
-
-    vector<LanguageVariable*> variableCopies;
-
-    for (auto i = 0; i < this->numVars-1; i++) {
-        auto var = this->variableParser->inputVariables.at(i)->clone();
-        variableCopies.push_back(var);
-        inferenceSystem->addVariable(var);
-    }
-    auto var = this->variableParser->outputVariables.front()->clone();
-    variableCopies.push_back(var);
-    inferenceSystem->addVariable(var);
+    auto inferenceSystem = new TSKInferenceSystem(knowledgeBase);
 
     for (auto i = 0; i<this->numRules; i++) {
-        auto antecedent = new Antecedent(new Zadeh::TNorm());
+        auto antecedent = new Antecedent(*(new Zadeh::TNorm));
 
         for (auto j =0; j<this->numVars-1; j++) {
-            auto var = variableCopies.at(j);
-            auto term = var->terms.at((uint)genotype->realValue[i * this->numRules + j]);
+            auto var = knowledgeBase->getVariable(variableNames[j]);
+            auto term = (uint)genotype->realValue[i * this->numRules + j];
 
-            antecedent->addClause(new Clause(var, term));
+            antecedent->addClause(*(new Clause(var, term)));
         }
 
-        auto var = variableCopies.back();
-        auto term = var->terms.at((uint)genotype->realValue[(i+1)*(this->numRules)]);
+        auto var = knowledgeBase->getVariable(variableNames.back());
+        auto term = (uint)genotype->realValue[(i+1)*(this->numRules)];
 
-        auto consequent = new Clause(var, term);
+        auto clause = new Clause(var, term);
+        auto consequent = new FuzzyConsequent(*clause);
 
-        auto rule = new Rule(antecedent, consequent);
+        auto rule = new Rule(*antecedent, *consequent);
 
-        inferenceSystem->addRule(rule);
+        inferenceSystem->addRule(*rule);
     }
 
     return inferenceSystem;
 
+}
+
+shared_ptr<Rule> FTSEvalOp::genotypeToRule(IndividualP individual) {
+    auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
+    auto antecedent = new Antecedent(*new Zadeh::TNorm());
+    for (auto i =0; i<this->numVars-1; i++) {
+        auto var = knowledgeBase->getVariable(variableNames[i]);
+        auto term = (uint)genotype->realValue[i];
+
+        antecedent->addClause(*(new Clause(var, term)));
+    }
+    auto var = knowledgeBase->getVariable(variableNames.back());
+    auto term = (uint)genotype->realValue.back();
+
+    auto clause = new Clause(var, term);
+    auto consequent = new FuzzyConsequent(*clause);
+
+    return make_shared<Rule>(*antecedent, *consequent);
 }
