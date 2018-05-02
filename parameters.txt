@@ -14,12 +14,12 @@
 	<Registry>
 	    <Entry key="data.input">pigs_prep.csv</Entry>
 	    <Entry key="fuzzy.langvars">pigs.conf</Entry>
-	    <Entry key="fuzzy.numrules">10</Entry>
-		<Entry key="population.size">5</Entry>
+	    <Entry key="fuzzy.numrules">30</Entry>
+		<Entry key="population.size">200</Entry>
 		<Entry key="mutation.indprob">0.3</Entry>
 		<Entry key="term.maxgen">20</Entry>
 		<Entry key="term.eval">100000</Entry>
 		<Entry key="log.frequency">10</Entry>
-		<Entry key="log.level">5</Entry>
+		<Entry key="log.level">3</Entry>
 	</Registry>
 </ECF>

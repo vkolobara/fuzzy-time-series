@@ -18,7 +18,7 @@ FitnessP FTSEvalOp::evaluate(IndividualP individual) {
         }
 
         double activation = rule->antecedent.get()->getActivation();
-        shared_ptr<FuzzyConsequent> consequent = rule->consequent;
+        auto consequent = static_pointer_cast<FuzzyConsequent>(rule->consequent);
         auto term = consequent->clause->languageVariable->getTerm(consequent->clause->termIndex);
 
 
@@ -31,13 +31,13 @@ FitnessP FTSEvalOp::evaluate(IndividualP individual) {
 
 
         for (auto i = min; i<=max; i+=step) {
-            sumX += activation * term->membership(i);
+            sumX += i * activation * term->membership(i);
             sum += term->membership(i);
         }
 
         double conclusion = sumX/sum;
 
-        fitnessVal += pow(conclusion - row->values.back(), 2);
+        fitnessVal += abs((conclusion - row->values.back())/row->values.back());
     }
 
     fitness->setValue(fitnessVal/dataset.get()->getNumRows());
@@ -82,13 +82,24 @@ bool FTSEvalOp::initialize(StateP state) {
     std::stringstream buffer;
     buffer << t.rdbuf();
 
-    this->variableParser = std::make_unique<VariableParser>();
-    this->variableParser.get()->parse(buffer.str());
+    this->knowledgeBase = make_shared<KnowledgeBase>();
+
+    this->variableParser = make_shared<VariableParser>();
+    this->variableParser->parse(buffer.str());
+
+    for (auto var : this->variableParser->inputVariables) {
+        variableNames.push_back(var->name);
+        knowledgeBase->variables[var->name] = var;
+    }
+    for (auto var : this->variableParser->outputVariables) {
+        variableNames.push_back(var->name);
+        knowledgeBase->variables[var->name] = var;
+    }
 
     sptr = state->getRegistry()->getEntry("data.input"); // get parameter value
     filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
 
-    this->dataset = Dataset::parseFile(filePath);
+    this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
 
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
     this->numRules = *((uint*) sptr.get());
@@ -104,19 +115,19 @@ bool FTSEvalOp::initialize(StateP state) {
 shared_ptr<InferenceSystem> FTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
     auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
 
-    auto inferenceSystem = new TSKInferenceSystem(knowledgeBase);
+    auto inferenceSystem = make_shared<TSKInferenceSystem>(knowledgeBase);
 
     for (auto i = 0; i<this->numRules; i++) {
         auto antecedent = new Antecedent(*(new Zadeh::TNorm));
 
         for (auto j =0; j<this->numVars-1; j++) {
-            auto var = knowledgeBase->getVariable(variableNames[j]);
+            auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[j]));
             auto term = (uint)genotype->realValue[i * this->numRules + j];
 
             antecedent->addClause(*(new Clause(var, term)));
         }
 
-        auto var = knowledgeBase->getVariable(variableNames.back());
+        auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames.back()));
         auto term = (uint)genotype->realValue[(i+1)*(this->numRules)];
 
         auto clause = new Clause(var, term);
@@ -135,12 +146,12 @@ shared_ptr<Rule> FTSEvalOp::genotypeToRule(IndividualP individual) {
     auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
     auto antecedent = new Antecedent(*new Zadeh::TNorm());
     for (auto i =0; i<this->numVars-1; i++) {
-        auto var = knowledgeBase->getVariable(variableNames[i]);
+        auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[i]));
         auto term = (uint)genotype->realValue[i];
 
         antecedent->addClause(*(new Clause(var, term)));
     }
-    auto var = knowledgeBase->getVariable(variableNames.back());
+    auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames.back()));
     auto term = (uint)genotype->realValue.back();
 
     auto clause = new Clause(var, term);
