@@ -2,10 +2,10 @@
 // Created by Vinko Kolobara on 11. 3. 2018..
 //
 
-#include "FTSEvalOp.h"
+#include "RegressionFTSEvalOp.h"
 #include <memory>
 
-FitnessP FTSEvalOp::evaluate(IndividualP individual) {
+FitnessP RegressionFTSEvalOp::evaluate(IndividualP individual) {
     FitnessP fitness (new FitnessMin);
 
     double fitnessVal = 0.0;
@@ -21,7 +21,6 @@ FitnessP FTSEvalOp::evaluate(IndividualP individual) {
         auto consequent = static_pointer_cast<FuzzyConsequent>(rule->consequent);
         auto term = consequent->clause->languageVariable->getTerm(consequent->clause->termIndex);
 
-
         double sumX = 0;
         double sum = 0;
 
@@ -32,10 +31,11 @@ FitnessP FTSEvalOp::evaluate(IndividualP individual) {
 
         for (auto i = min; i<=max; i+=step) {
             sumX += i * activation * term->membership(i);
-            sum += term->membership(i);
+            sum += activation * term->membership(i);
         }
 
-        double conclusion = sumX/sum;
+        if (sum <= 1e-6) sum = 1;
+        double conclusion = sumX/sum + 1;
 
         fitnessVal += abs((conclusion - row->values.back())/row->values.back());
     }
@@ -44,7 +44,7 @@ FitnessP FTSEvalOp::evaluate(IndividualP individual) {
     return fitness;
 }
 
-void FTSEvalOp::registerParameters(StateP state) {
+void RegressionFTSEvalOp::registerParameters(StateP state) {
     //register entry langvar for file with Language Variable definition
     state->getRegistry()->registerEntry("fuzzy.langvars", (voidP) (new std::string), ECF::STRING);
 
@@ -55,7 +55,7 @@ void FTSEvalOp::registerParameters(StateP state) {
     state->getRegistry()->registerEntry("fuzzy.numrules", (voidP) (new uint(1)), ECF::UINT);
 }
 
-bool FTSEvalOp::initialize(StateP state) {
+bool RegressionFTSEvalOp::initialize(StateP state) {
 
     //get registered entry and parse the file with LanguageVariablesParser
     if(!state->getRegistry()->isModified("fuzzy.langvars")) {
@@ -112,7 +112,7 @@ bool FTSEvalOp::initialize(StateP state) {
     return true;
 }
 
-shared_ptr<InferenceSystem> FTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
+shared_ptr<InferenceSystem> RegressionFTSEvalOp::genotypeToInferenceSystem(IndividualP individual) {
     auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
 
     auto inferenceSystem = make_shared<TSKInferenceSystem>(knowledgeBase);
@@ -142,7 +142,7 @@ shared_ptr<InferenceSystem> FTSEvalOp::genotypeToInferenceSystem(IndividualP ind
 
 }
 
-shared_ptr<Rule> FTSEvalOp::genotypeToRule(IndividualP individual) {
+shared_ptr<Rule> RegressionFTSEvalOp::genotypeToRule(IndividualP individual) {
     auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
     auto antecedent = new Antecedent(*new Zadeh::TNorm());
     for (auto i =0; i<this->numVars-1; i++) {

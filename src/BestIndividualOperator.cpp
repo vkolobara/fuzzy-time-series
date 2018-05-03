@@ -3,16 +3,16 @@
 //
 
 #include "BestIndividualOperator.h"
-#include "FTSEvalOp.h"
+#include "RegressionFTSEvalOp.h"
 
 bool BestIndividualOperator::operate(StateP state) {
     auto selOp = make_shared<SelFitnessProportionalOp>();
     selOp->initialize(state);
-    auto evalOp = (FTSEvalOp*)(state->getEvalOp().get());
+    auto evalOp = (RegressionFTSEvalOp*)(state->getEvalOp().get());
 
     auto individuals = state->getPopulation()->getLocalDeme();
 
-    auto selected = selOp->selectMany(*individuals, 10);
+    auto selected = selOp->selectMany(*individuals, evalOp->numRules);
 
     vector<shared_ptr<Rule>> rules;
     auto dataset = evalOp->dataset;
@@ -34,6 +34,7 @@ bool BestIndividualOperator::operate(StateP state) {
         double min = conseq->clause->languageVariable->min;
         double max = conseq->clause->languageVariable->max;
         double step = conseq->clause->languageVariable->step;
+        double sumC = 0;
         for (auto rule : rules) {
             double activation = rule->antecedent.get()->getActivation();
             auto consequent = static_pointer_cast<FuzzyConsequent>(rule->consequent);
@@ -43,13 +44,17 @@ bool BestIndividualOperator::operate(StateP state) {
             double sum = 0;
 
             for (auto i = min; i<=max; i+=step) {
-                sumX += i * activation * term->membership(i);
+                sumX += i * term->membership(i);
                 sum += term->membership(i);
             }
-            sumConclusion += sumX/sum;
+
+            if (sum <= 1e-6) sum = 1;
+            sumConclusion += activation * sumX/sum;
+            sumC += activation;
         }
 
-        auto conclusion = sumConclusion / rules.size();
+        if (sumC <= 1e-6) sumC = 1;
+        auto conclusion = sumConclusion / sumC + 1;
 
         cout << "REAL: " << row->values.back() << "; PRED: " << conclusion << endl;
 

@@ -12,10 +12,10 @@
 		</FloatingPoint>
 	</Genotype>
 	<Registry>
-	    <Entry key="data.input">pigs_prep.csv</Entry>
-	    <Entry key="fuzzy.langvars">pigs.conf</Entry>
-	    <Entry key="fuzzy.numrules">30</Entry>
-		<Entry key="population.size">200</Entry>
+	    <Entry key="data.input">data/pigs_prep.csv</Entry>
+	    <Entry key="fuzzy.langvars">conf/pigs.conf</Entry>
+	    <Entry key="fuzzy.numrules">10</Entry>
+		<Entry key="population.size">50</Entry>
 		<Entry key="mutation.indprob">0.3</Entry>
 		<Entry key="term.maxgen">20</Entry>
 		<Entry key="term.eval">100000</Entry>

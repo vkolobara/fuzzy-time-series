@@ -4,6 +4,7 @@
 
 #include "DataRow.h"
 #include <FIS/parser/Helper.h>
+#include <iostream>
 
 DataRow::DataRow(const std::vector<double> &values) : values(values) {}
 

@@ -3,6 +3,7 @@
 //
 
 #include <fstream>
+#include <iostream>
 #include "Dataset.h"
 
 Dataset* Dataset::parseFile(string filePath) {
@@ -12,6 +13,7 @@ Dataset* Dataset::parseFile(string filePath) {
 
     string line;
 
+    cout << filePath << endl;
     while (getline(file, line)) {
         if (line == "") continue;
         rows.push_back(DataRow::parseLine(line));

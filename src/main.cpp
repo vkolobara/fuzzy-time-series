@@ -3,12 +3,12 @@
 //
 
 #include <ECF/ECF.h>
-#include "FTSEvalOp.h"
+#include "RegressionFTSEvalOp.h"
 #include "BestIndividualOperator.h"
 
 int main(int argc, char **argv) {
     StateP state (new State);
-    state->setEvalOp((FTSEvalOpP) new FTSEvalOp);
+    state->setEvalOp((RegressionFTSEvalOpP) new RegressionFTSEvalOp);
     state->addOperator((BestIndividualOperatorP) new BestIndividualOperator);
 
     state->initialize(argc, argv);

@@ -55,4 +55,3 @@ def macd(df, n_fast, n_slow):
     macd_signal = pd.Series(macd.ewm(span=9, min_periods=9).mean(), name='MACDSign_' + str(n_fast) + '_' + str(n_slow))
     macd_diff = pd.Series(macd - macd_signal, name='MACDDiff_' + str(n_fast) + '_' + str(n_slow))
     return df.join(macd).join(macd_signal).join(macd_diff)
-

@@ -10,7 +10,7 @@
 #include "FIS/parser/VariableParser.h"
 #include "dataset/Dataset.h"
 
-class FTSEvalOp : public EvaluateOp {
+class RegressionFTSEvalOp : public EvaluateOp {
 public:
     shared_ptr<VariableParser> variableParser;
     shared_ptr<Dataset> dataset;
@@ -28,7 +28,7 @@ public:
     shared_ptr<Rule> genotypeToRule(IndividualP individual);
 
 };
-typedef boost::shared_ptr<FTSEvalOp> FTSEvalOpP;
+typedef boost::shared_ptr<RegressionFTSEvalOp> RegressionFTSEvalOpP;
 
 
 #endif //FUZZY_TIME_SERIES_FTSEVALOP_H
