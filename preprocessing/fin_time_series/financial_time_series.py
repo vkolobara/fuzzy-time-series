@@ -22,7 +22,7 @@ def bollinger_bands(df, n):
     """
     ma = pd.Series(df['Close'].rolling(n, min_periods=n).mean())
     msd = pd.Series(df['Close'].rolling(n, min_periods=n).std())
-    b1 = 4 * MSD / MA
+    b1 = 4 * msd / ma
     B1 = pd.Series(b1, name='BollingerB1_' + str(n))
     ret = df.join(B1)
 
