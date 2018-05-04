@@ -17,9 +17,9 @@
 	    <Entry key="fuzzy.numrules">10</Entry>
 		<Entry key="population.size">50</Entry>
 		<Entry key="mutation.indprob">0.3</Entry>
-		<Entry key="term.maxgen">20</Entry>
+		<Entry key="term.maxgen">20000</Entry>
 		<Entry key="term.eval">100000</Entry>
 		<Entry key="log.frequency">10</Entry>
-		<Entry key="log.level">3</Entry>
+		<Entry key="log.level">5</Entry>
 	</Registry>
 </ECF>

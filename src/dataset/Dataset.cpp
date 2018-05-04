@@ -13,7 +13,8 @@ Dataset* Dataset::parseFile(string filePath) {
 
     string line;
 
-    cout << filePath << endl;
+    // Skip headers
+    getline(file, line);
     while (getline(file, line)) {
         if (line == "") continue;
         rows.push_back(DataRow::parseLine(line));

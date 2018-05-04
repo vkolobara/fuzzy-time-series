@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri May  4 11:44:23 2018
+
+@author: vkolobara
+"""
+
 from fuzzify_dataset import LambdaTerm, TrapezoidalTerm, LanguageVariable, generate_lang_term, generate_trapeizodal_lang_var, fuzzify_vars
 from fuzzify_conf import conf
 import pandas as pd
@@ -17,7 +25,7 @@ vals = df['term'].values
 lst = []
 
 for i in range(0, len(vals)*3//4):
-    lst.append((vals[i], vals[i+1]))
+    lst.append((vals[i], vals[i+1], vals[i+2]))
 
 ws = {}
 for l in lst:
@@ -32,14 +40,12 @@ print(len(st))
 
 dct = {}
 
-for (x, y) in st:
+for (x, y, z) in st:
     if x in dct:
-        dct[x].append(y)
+        dct[(x,y)].append(z)
     else:
-        dct[x] = [y]
+        dct[(x,y)] = [z]
         
-print(dct)
-
 values = df['Value'].values
 
 mse = 0
@@ -47,14 +53,17 @@ mape = 0
 
 print()
 
-for i in range(0, len(values)-1):
+for i in range(1, len(values)-1):
     pred = 0
     
     sum_ws = 0
-    if vals[i] in dct:
-        for j in dct[vals[i]]:
-            sum_ws += ws[(vals[i],j)]
-            pred += ws[(vals[i],j)] * (terms[j].b + terms[j].c) / 2 
+    
+    (x,y) = (vals[i-1], vals[i])
+    
+    if (x,y) in dct:
+        for j in dct[(x,y)]:
+            sum_ws += ws[(x, y, j)]
+            pred += ws[(x, y, j)] * (terms[j].b + terms[j].c) / 2 
         pred /= sum_ws
     else:
         pred = (terms[vals[i]].b + terms[vals[i]].c) / 2
