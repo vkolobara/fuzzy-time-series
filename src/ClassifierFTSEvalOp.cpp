@@ -3,7 +3,6 @@
 //
 
 #include "ClassifierFTSEvalOp.h"
-#include <memory>
 
 FitnessP ClassifierFTSEvalOp::evaluate(IndividualP individual) {
     FitnessP fitness (new FitnessMin);
@@ -100,7 +99,7 @@ bool ClassifierFTSEvalOp::initialize(StateP state) {
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
     this->numRules = *((uint*) sptr.get());
 
-    this->numVars = variableParser.get()->inputVariables.size();
+    this->numVars = variableParser->inputVariables.size();
 
     state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numRules * (this->numVars+1)));
     state->getPopulation()->initialize(state);

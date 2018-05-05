@@ -4,6 +4,6 @@ conf = {
     # "out_var_name": ("class", 1, "OUT"),
     "in_path": "../../data/pigs.csv",
     # "out_path": "../../conf/enrollment.conf",
-    "in_terms": 7,
+    "in_terms": 17,
     "out_terms": 7,
 }
