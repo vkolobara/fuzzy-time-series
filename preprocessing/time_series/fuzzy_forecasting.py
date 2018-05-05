@@ -2,6 +2,7 @@ from fuzzify_dataset import LambdaTerm, TrapezoidalTerm, LanguageVariable, gener
 from fuzzify_conf import conf
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 lang_var = fuzzify_vars()[0]
 
@@ -47,6 +48,8 @@ mape = 0
 
 print()
 
+preds = []
+
 for i in range(0, len(values)-1):
     pred = 0
     
@@ -59,6 +62,7 @@ for i in range(0, len(values)-1):
     else:
         pred = (terms[vals[i]].b + terms[vals[i]].c) / 2
     
+    preds.append(pred)
     print(pred, values[i+1])
     mse += pow(pred-values[i+1], 2)
     mape += abs((pred - values[i+1]) / (values[i+1]))
@@ -68,3 +72,8 @@ print()
 print("MAPE:" + str(100*mape/(len(values)-1)))
 print("MSE:" + str(mse / (len(values) - 1) ))
 print(dct)
+print(len(dct))
+
+preds = np.array(preds)
+plt.plot(preds)
+plt.plot(values[1:])

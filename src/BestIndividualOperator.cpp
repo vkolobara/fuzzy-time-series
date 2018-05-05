@@ -12,7 +12,13 @@ bool BestIndividualOperator::operate(StateP state) {
 
     auto individuals = state->getPopulation()->getLocalDeme();
 
-    auto selected = selOp->selectMany(*individuals, evalOp->numRules);
+    vector<boost::shared_ptr<Individual>> selected(10);
+
+    for (auto i=0; i<state->getPopulation()->getNoDemes(); i++) {
+        selected[i] = selOp->select(*state->getPopulation()->at(i).get());
+    }
+
+    //auto selected = selOp->selectMany(*individuals, evalOp->numRules);
 
     vector<shared_ptr<Rule>> rules;
     auto dataset = evalOp->dataset;
@@ -29,22 +35,31 @@ bool BestIndividualOperator::operate(StateP state) {
         for (auto i = 0; i < row->values.size()-1; i++) {
             knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
         }
-        double sumConclusion = 0;
+        //double conclusion = 0;
+        //double bestActivation = 0;
         double sumC = 0;
+        double sum = 0;
         for (auto rule : rules) {
             double activation = rule->antecedent.get()->getActivation();
-            auto consequent = static_pointer_cast<LinearConsequent>(rule->consequent);
+            //auto consequent = static_pointer_cast<ConstantConsequent>(rule->consequent);
 
-            sumConclusion += activation * consequent->membership();
-            sumC += activation;
+            auto consequent = static_pointer_cast<LinearVariableConsequent>(rule->consequent);
+
+            sumC += activation * consequent->membership();
+            sum += activation;
+
+            //if (activation >= bestActivation) {
+            //    conclusion = consequent->membership();
+            //    bestActivation = activation;
+            //}
         }
 
-        if (sumC <= 1e-6) sumC = 1;
-        auto conclusion = sumConclusion / sumC;
+        if (sum <= 1e-6) sum = 1;
+        auto conclusion = sumC / sum;
 
         cout << "REAL: " << row->values.back() << "; PRED: " << conclusion << endl;
 
-        sumFit += abs((conclusion - row->values.back()) / row->values.back());
+        sumFit += evalOp->errorFunction->error(row->values.back(), conclusion);
     }
 
     fitnessVal = sumFit / dataset->getNumRows();

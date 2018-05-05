@@ -9,6 +9,7 @@
 #include <FIS/rule/InferenceSystem.h>
 #include "FIS/parser/VariableParser.h"
 #include "dataset/Dataset.h"
+#include "ErrorFunction.h"
 
 class ClassifierFTSEvalOp : public EvaluateOp {
 public:
@@ -20,12 +21,16 @@ public:
     uint numRules;
     uint numVars;
 
+    shared_ptr<ErrorFunction> errorFunction;
+
 public:
     FitnessP evaluate(IndividualP individual) override;
     void registerParameters(StateP) override;
     bool initialize(StateP) override;
     virtual shared_ptr<Rule> genotypeToRule(IndividualP individual);
 
+private:
+    vector<shared_ptr<Rule>> genotypeToRules(IndividualP individual);
 };
 typedef boost::shared_ptr<ClassifierFTSEvalOp> ClassifierFTSEvalOpP;
 

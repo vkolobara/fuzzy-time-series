@@ -10,34 +10,30 @@ FitnessP ClassifierFTSEvalOp::evaluate(IndividualP individual) {
 
     double fitnessVal = 0.0;
 
-    auto rule = genotypeToRule(individual);
+    auto rules = genotypeToRules(individual);
 
     for (auto row : dataset.get()->dataset) {
         for (auto i = 0; i < row->values.size()-1; i++) {
            knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
         }
 
-        double activation = rule->antecedent.get()->getActivation();
-        auto consequent = static_pointer_cast<FuzzyConsequent>(rule->consequent);
-        auto term = consequent->clause->languageVariable->getTerm(consequent->clause->termIndex);
+        double conclusion = 0;
+        double bestActivation = 0;
 
-        double sumX = 0;
-        double sum = 0;
+        for (auto rule : rules) {
 
-        double min = consequent->clause->languageVariable->min;
-        double max = consequent->clause->languageVariable->max;
-        double step = consequent->clause->languageVariable->step;
+            double activation = rule->antecedent.get()->getActivation();
+            auto consequent = static_pointer_cast<ConstantConsequent>(rule->consequent);
 
 
-        for (auto i = min; i<=max; i+=step) {
-            sumX += i * activation * term->membership(i);
-            sum += activation * term->membership(i);
+            if (activation >= bestActivation) {
+                conclusion = consequent->membership();
+                bestActivation = activation;
+            }
+
         }
 
-        if (sum <= 1e-6) sum = 1;
-        double conclusion = sumX/sum;
-
-        fitnessVal += abs((conclusion - row->values.back())/row->values.back());
+        fitnessVal += this->errorFunction->error(row->values.back(), conclusion);
     }
 
     fitness->setValue(fitnessVal/dataset.get()->getNumRows());
@@ -104,10 +100,12 @@ bool ClassifierFTSEvalOp::initialize(StateP state) {
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
     this->numRules = *((uint*) sptr.get());
 
-    this->numVars = variableParser.get()->inputVariables.size()+1;
+    this->numVars = variableParser.get()->inputVariables.size();
 
-    state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numVars));
+    state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numRules * (this->numVars+1)));
     state->getPopulation()->initialize(state);
+
+    this->errorFunction = make_shared<MeanSquaredError>();
 
     return true;
 }
@@ -115,17 +113,37 @@ bool ClassifierFTSEvalOp::initialize(StateP state) {
 shared_ptr<Rule> ClassifierFTSEvalOp::genotypeToRule(IndividualP individual) {
     auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
     auto antecedent = new Antecedent(*new Zadeh::TNorm());
-    for (auto i =0; i<this->numVars-1; i++) {
+    for (auto i = 0; i<this->numVars; i++) {
         auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[i]));
         auto term = (uint)genotype->realValue[i];
 
         antecedent->addClause(*(new Clause(var, term)));
     }
-    auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames.back()));
-    auto term = (uint)genotype->realValue.back();
+    auto val = (uint)genotype->realValue.back() + 1;
 
-    auto clause = new Clause(var, term);
-    auto consequent = new FuzzyConsequent(*clause);
+    auto consequent = new ConstantConsequent(val);
 
     return make_shared<Rule>(*antecedent, *consequent);
+}
+
+vector<shared_ptr<Rule>> ClassifierFTSEvalOp::genotypeToRules(IndividualP individual) {
+
+    vector<shared_ptr<Rule>> rules(this->numRules);
+    auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
+    for (auto j = 0; j<this->numRules; j++) {
+        auto antecedent = new Antecedent(*new Zadeh::TNorm());
+        for (auto i = 0; i < this->numVars; i++) {
+
+            auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[i]));
+            auto term = (uint) genotype->realValue[j*(this->numVars+1) + i];
+
+            antecedent->addClause(*(new Clause(var, term)));
+        }
+        auto val = (uint) genotype->realValue[(j+1)*(this->numVars)] + 1;
+
+        auto consequent = new ConstantConsequent(val);
+        rules[j] = make_shared<Rule>(*antecedent, *consequent);
+    }
+
+    return rules;
 }

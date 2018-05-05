@@ -12,13 +12,13 @@
 		</FloatingPoint>
 	</Genotype>
 	<Registry>
-	    <Entry key="data.input">data/iris_prep.data</Entry>
+	    <Entry key="data.input">data/iris.data</Entry>
 	    <Entry key="fuzzy.langvars">conf/iris.conf</Entry>
 	    <Entry key="fuzzy.numrules">20</Entry>
 		<Entry key="population.size">100</Entry>
 		<Entry key="mutation.indprob">0.7</Entry>
-		<Entry key="term.eval">100000</Entry>
+		<Entry key="term.eval">10000</Entry>
 		<Entry key="log.frequency">10</Entry>
-		<Entry key="log.level">5</Entry>
+		<Entry key="log.level">3</Entry>
 	</Registry>
 </ECF>

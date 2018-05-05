@@ -17,11 +17,11 @@ FitnessP RegressionFTSEvalOp::evaluate(IndividualP individual) {
         }
 
         auto activation = rule->antecedent.get()->getActivation();
-        auto consequent = static_pointer_cast<LinearConsequent>(rule->consequent);
+        auto consequent = static_pointer_cast<LinearVariableConsequent>(rule->consequent);
 
         auto conclusion = activation * consequent->membership();
 
-        fitnessVal += abs((conclusion - row->values.back()) / row->values.back());
+        fitnessVal += this->errorFunction->error(row->values.back(), conclusion);
     }
 
     fitness->setValue(fitnessVal / dataset.get()->getNumRows());
@@ -44,7 +44,7 @@ shared_ptr<Rule> RegressionFTSEvalOp::genotypeToRule(IndividualP individual) {
         ws[i] = genotype->realValue[this->numVars + i];
     }
 
-    auto consequent = new LinearConsequent(ws, this->variableParser->inputVariables);
+    auto consequent = new LinearVariableConsequent(ws, this->variableParser->inputVariables);
 
     return make_shared<Rule>(*antecedent, *consequent);
 }
@@ -55,6 +55,8 @@ bool RegressionFTSEvalOp::initialize(StateP state) {
         this->numVars = variableParser.get()->inputVariables.size();
         state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(2*this->numVars));
         state->getPopulation()->initialize(state);
+
+        this->errorFunction = make_shared<MeanAbsolutePercentageError>();
         return true;
     }
 

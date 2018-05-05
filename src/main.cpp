@@ -9,8 +9,8 @@
 
 int main(int argc, char **argv) {
     StateP state (new State);
-    state->setEvalOp((RegressionFTSEvalOpP) new RegressionFTSEvalOp);
-    state->addOperator((BestIndividualOperatorP) new BestIndividualOperator);
+    state->setEvalOp((ClassifierFTSEvalOpP) new ClassifierFTSEvalOp);
+    //state->addOperator((BestIndividualOperatorP) new BestIndividualOperator);
 
     state->initialize(argc, argv);
 
