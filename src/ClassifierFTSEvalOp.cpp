@@ -11,7 +11,8 @@ FitnessP ClassifierFTSEvalOp::evaluate(IndividualP individual) {
 
     auto rules = genotypeToRules(individual);
 
-    for (auto row : dataset.get()->dataset) {
+    for (auto row : dataset->dataset) {
+
         for (auto i = 0; i < row->values.size()-1; i++) {
            knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
         }
@@ -21,21 +22,17 @@ FitnessP ClassifierFTSEvalOp::evaluate(IndividualP individual) {
 
         for (auto rule : rules) {
 
-            double activation = rule->antecedent.get()->getActivation();
-            auto consequent = static_pointer_cast<ConstantConsequent>(rule->consequent);
-
+            double activation = rule->antecedent->getActivation();
 
             if (activation >= bestActivation) {
-                conclusion = consequent->membership();
+                conclusion = rule->consequent->membership();
                 bestActivation = activation;
             }
-
         }
-
         fitnessVal += this->errorFunction->error(row->values.back(), conclusion);
     }
 
-    fitness->setValue(fitnessVal/dataset.get()->getNumRows());
+    fitness->setValue(fitnessVal/dataset->getNumRows());
     return fitness;
 }
 
@@ -86,10 +83,6 @@ bool ClassifierFTSEvalOp::initialize(StateP state) {
         variableNames.push_back(var->name);
         knowledgeBase->variables[var->name] = var;
     }
-    for (auto var : this->variableParser->outputVariables) {
-        variableNames.push_back(var->name);
-        knowledgeBase->variables[var->name] = var;
-    }
 
     sptr = state->getRegistry()->getEntry("data.input"); // get parameter value
     filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
@@ -101,24 +94,31 @@ bool ClassifierFTSEvalOp::initialize(StateP state) {
 
     this->numVars = variableParser->inputVariables.size();
 
-    state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numRules * (this->numVars+1)));
+    //state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numRules * (this->numVars)));
+
+    state->getGenotypes()[0]->setParameterValue(state, "dimension", (voidP) new uint(this->numRules * this->numVars));
+    state->getGenotypes()[1]->setParameterValue(state, "dimension", (voidP) new uint(this->numRules));
+
     state->getPopulation()->initialize(state);
 
-    this->errorFunction = make_shared<MeanSquaredError>();
+    this->errorFunction = make_shared<MisclassificationError>();
 
     return true;
 }
 
 shared_ptr<Rule> ClassifierFTSEvalOp::genotypeToRule(IndividualP individual) {
-    auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
+
+    auto genotypeAntecedent = (FloatingPoint::FloatingPoint*) individual->getGenotype(0).get();
+    auto genotypeConsequent = (FloatingPoint::FloatingPoint*) individual->getGenotype(1).get();
+
     auto antecedent = new Antecedent(*new Zadeh::TNorm());
     for (auto i = 0; i<this->numVars; i++) {
         auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[i]));
-        auto term = (uint)genotype->realValue[i];
+        auto term = (uint)genotypeAntecedent->realValue[i];
 
         antecedent->addClause(*(new Clause(var, term)));
     }
-    auto val = (uint)genotype->realValue.back() + 1;
+    auto val = (uint)genotypeConsequent->realValue.back();
 
     auto consequent = new ConstantConsequent(val);
 
@@ -128,17 +128,20 @@ shared_ptr<Rule> ClassifierFTSEvalOp::genotypeToRule(IndividualP individual) {
 vector<shared_ptr<Rule>> ClassifierFTSEvalOp::genotypeToRules(IndividualP individual) {
 
     vector<shared_ptr<Rule>> rules(this->numRules);
-    auto genotype = (FloatingPoint::FloatingPoint*) individual->getGenotype().get();
+
+    auto genotypeAntecedent = (FloatingPoint::FloatingPoint*) individual->getGenotype(0).get();
+    auto genotypeConsequent = (FloatingPoint::FloatingPoint*) individual->getGenotype(1).get();
+
     for (auto j = 0; j<this->numRules; j++) {
         auto antecedent = new Antecedent(*new Zadeh::TNorm());
         for (auto i = 0; i < this->numVars; i++) {
 
             auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[i]));
-            auto term = (uint) genotype->realValue[j*(this->numVars+1) + i];
+            auto term = (uint) genotypeAntecedent->realValue[j*this->numVars + i];
 
             antecedent->addClause(*(new Clause(var, term)));
         }
-        auto val = (uint) genotype->realValue[(j+1)*(this->numVars)] + 1;
+        auto val = (uint) genotypeConsequent->realValue[j];
 
         auto consequent = new ConstantConsequent(val);
         rules[j] = make_shared<Rule>(*antecedent, *consequent);

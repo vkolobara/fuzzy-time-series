@@ -7,18 +7,33 @@ set(fuzzy-time-series_VERSION_MINOR 0)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-        src/main.cpp
-        src/ClassifierFTSEvalOp.cpp src/ClassifierFTSEvalOp.h src/dataset/Dataset.cpp src/dataset/Dataset.h src/dataset/DataRow.cpp src/dataset/DataRow.h src/BestIndividualOperator.cpp src/BestIndividualOperator.h src/RegressionFTSEvalOp.cpp src/RegressionFTSEvalOp.h src/ErrorFunction.cpp src/ErrorFunction.h)
+        src/ClassifierFTSEvalOp.cpp src/ClassifierFTSEvalOp.h src/dataset/Dataset.cpp src/dataset/Dataset.h src/dataset/DataRow.cpp src/dataset/DataRow.h src/ErrorFunction.cpp src/ErrorFunction.h)
 
 add_subdirectory(lib/ECF)
 add_subdirectory(lib/fuzzy-inference-system)
 
-add_executable(fuzzy-time-series ${SOURCE_FILES})
+add_executable(fts-regression src/main_regression.cpp ${SOURCE_FILES})
+add_executable(fts-classification src/main_classification.cpp ${SOURCE_FILES} src/RegressionFTSEvalOp.cpp src/RegressionFTSEvalOp.h src/BestIndividualOperator.cpp src/BestIndividualOperator.h)
+add_executable(fts-financial src/main_financial.cpp ${SOURCE_FILES} src/FinTimeSeriesEvalOp.cpp src/FinTimeSeriesEvalOp.h)
 
-target_include_directories(fuzzy-time-series PRIVATE lib/ECF)
-target_include_directories(fuzzy-time-series PRIVATE lib/fuzzy-inference-system)
-target_include_directories(fuzzy-time-series PRIVATE ${Boost_INCLUDE_DIR})
 
-target_link_libraries(fuzzy-time-series ECF)
-target_link_libraries(fuzzy-time-series FIS)
+target_include_directories(fts-regression PRIVATE lib/ECF)
+target_include_directories(fts-regression PRIVATE lib/fuzzy-inference-system)
+target_include_directories(fts-regression PRIVATE ${Boost_INCLUDE_DIR})
 
+target_link_libraries(fts-regression ECF)
+target_link_libraries(fts-regression FIS)
+
+target_include_directories(fts-classification PRIVATE lib/ECF)
+target_include_directories(fts-classification PRIVATE lib/fuzzy-inference-system)
+target_include_directories(fts-classification PRIVATE ${Boost_INCLUDE_DIR})
+
+target_link_libraries(fts-classification ECF)
+target_link_libraries(fts-classification FIS)
+
+target_include_directories(fts-financial PRIVATE lib/ECF)
+target_include_directories(fts-financial PRIVATE lib/fuzzy-inference-system)
+target_include_directories(fts-financial PRIVATE ${Boost_INCLUDE_DIR})
+
+target_link_libraries(fts-financial ECF)
+target_link_libraries(fts-financial FIS)

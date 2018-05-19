@@ -10,11 +10,16 @@
 			<Entry key="ubound">3</Entry>
 			<Entry key="dimension">20</Entry>
 		</FloatingPoint>
+	    <FloatingPoint>
+            <Entry key="lbound">1</Entry>
+            <Entry key="ubound">4</Entry>
+            <Entry key="dimension">20</Entry>
+        </FloatingPoint>
 	</Genotype>
 	<Registry>
 	    <Entry key="data.input">data/iris.data</Entry>
 	    <Entry key="fuzzy.langvars">conf/iris.conf</Entry>
-	    <Entry key="fuzzy.numrules">20</Entry>
+	    <Entry key="fuzzy.numrules">10</Entry>
 		<Entry key="population.size">100</Entry>
 		<Entry key="mutation.indprob">0.7</Entry>
 		<Entry key="term.eval">10000</Entry>

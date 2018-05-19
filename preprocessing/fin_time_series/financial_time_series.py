@@ -45,7 +45,7 @@ def stochastic_oscillator_d(df, n):
     sod = pd.Series(sok.ewm(span=n, min_periods=n).mean(), name='SOd_' + str(n))
     return df.join(sod)
 
-def macd(df, n_fast, n_slow):
+def macd(df, n_fast=15, n_slow=26):
     """
     Calculates MACD with n_fast and n_slow as parameters for number of periods.
     """

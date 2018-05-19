@@ -10,15 +10,21 @@
 			<Entry key="ubound">6.99</Entry>
 			<Entry key="dimension">20</Entry>
 		</FloatingPoint>
+		<FloatingPoint>
+            <Entry key="lbound">0</Entry>
+            <Entry key="ubound">1</Entry>
+            <Entry key="dimension">2</Entry>
+        </FloatingPoint>
 	</Genotype>
 	<Registry>
-	    <Entry key="population.demes">10</Entry>
-	    <Entry key="migration.freq">10</Entry>
+        <Entry key="population.demes">10</Entry>
+        <Entry key="migration.freq">10</Entry>
         <Entry key="migration.number">5</Entry>
 
-	    <Entry key="data.input">data/pigs_prep.csv</Entry>
-	    <Entry key="fuzzy.langvars">conf/pigs.conf</Entry>
+	    <Entry key="data.input">data/SP500_prep_price.csv</Entry>
+	    <Entry key="fuzzy.langvars">conf/sp500_price.conf</Entry>
 	    <Entry key="fuzzy.numrules">10</Entry>
+
 		<Entry key="population.size">50</Entry>
 		<Entry key="mutation.indprob">0.7</Entry>
 		<Entry key="term.maxgen">20000</Entry>

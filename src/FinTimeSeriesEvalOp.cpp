@@ -1,55 +1,57 @@
 //
-// Created by vkolobara on 5/4/18.
+// Created by Vinko Kolobara on 18. 5. 2018..
 //
 
-#include "RegressionFTSEvalOp.h"
+#include "FinTimeSeriesEvalOp.h"
 
-FitnessP RegressionFTSEvalOp::evaluate(IndividualP individual) {
-    FitnessP fitness(new FitnessMin);
-
-    double fitnessVal = 0.0;
+FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual) {
+    FitnessP fitness(new FitnessMax);
 
     auto rule = genotypeToRule(individual);
+
+    double buySum = 0;
+    unsigned int buyCount = 0;
+    double sellSum = 0;
+    unsigned int sellCount = 0;
 
     for (auto row : dataset.get()->dataset) {
         for (auto i = 0; i < row->values.size() - 1; i++) {
             knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
         }
 
-        auto activation = rule->antecedent.get()->getActivation();
-        auto consequent = static_pointer_cast<LinearVariableConsequent>(rule->consequent);
+        auto activation = rule->antecedent->getActivation();
 
-        auto conclusion = activation * consequent->membership();
+        auto consequent = static_pointer_cast<MultipleConstantConsequent>(rule->consequent);
 
-        fitnessVal += this->errorFunction->error(row->values.back(), conclusion);
+        auto sellFactor = activation * consequent->weights[0];
+        auto buyFactor = activation* consequent->weights[1];
+
+        if (sellFactor > 0.2) {
+            sellSum += consequent->weights[0]*row->values.back();
+            sellCount++;
+        }
+        if (buyFactor > 0.2) {
+            buySum+=consequent->weights[1]*row->values.back();
+            buyCount++;
+        }
+
     }
 
-    fitness->setValue(fitnessVal / dataset.get()->getNumRows());
+    if (buyCount == 0) buyCount = 1;
+    if (sellCount == 0) sellCount = 1;
+
+    auto buyValue = buySum / buyCount;
+    auto sellValue = sellSum / sellCount;
+
+    if (buyValue < 1e-7) fitness->setValue(0);
+    else fitness->setValue(sellValue / buyValue);
+
+    //cout << "BUY: " << buyValue << "; SELL: " << sellValue << endl;
+
     return fitness;
 }
 
-shared_ptr<Rule> RegressionFTSEvalOp::genotypeToRule(IndividualP individual) {
-    auto genotype = (FloatingPoint::FloatingPoint *) individual->getGenotype().get();
-    auto antecedent = new Antecedent(*new Zadeh::TNorm());
-    for (auto i = 0; i < this->numVars; i++) {
-        auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[i]));
-        auto term = (uint) genotype->realValue[i];
-
-        antecedent->addClause(*(new Clause(var, term)));
-    }
-
-    vector<double> ws(this->numVars);
-
-    for (auto i = 0; i < this->numVars; i++) {
-        ws[i] = genotype->realValue[this->numVars + i];
-    }
-
-    auto consequent = new LinearVariableConsequent(ws, this->variableParser->inputVariables);
-
-    return make_shared<Rule>(*antecedent, *consequent);
-}
-
-bool RegressionFTSEvalOp::initialize(StateP state) {
+bool FinTimeSeriesEvalOp::initialize(StateP state) {
 
     //get registered entry and parse the file with LanguageVariablesParser
     if (!state->getRegistry()->isModified("fuzzy.langvars")) {
@@ -96,12 +98,37 @@ bool RegressionFTSEvalOp::initialize(StateP state) {
 
     this->numVars = variableParser->inputVariables.size();
 
+    // Antecedent (all variables)
+    state->getGenotypes()[0]->setParameterValue(state, "dimension", (voidP) new uint(this->numVars));
+
+    // Consequent (2 weights, one for buy, one for sell)
+    state->getGenotypes()[1]->setParameterValue(state, "dimension", (voidP) new uint(2));
+
     state->getRegistry()->modifyEntry("population.demes", (voidP) new uint(this->numRules));
     //state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(this->numRules * (this->numVars)));
 
-    state->getRegistry()->modifyEntry("FloatingPoint.dimension", (voidP) new uint(2 * this->numVars));
     state->getPopulation()->initialize(state);
 
     this->errorFunction = make_shared<MeanAbsolutePercentageError>();
     return true;
+}
+
+shared_ptr <Rule> FinTimeSeriesEvalOp::genotypeToRule(IndividualP individual) {
+
+    auto genotypeAntecedent = (FloatingPoint::FloatingPoint*) individual->getGenotype(0).get();
+    auto genotypeConsequent = (FloatingPoint::FloatingPoint*) individual->getGenotype(1).get();
+
+    auto antecedent = new Antecedent(*new Zadeh::TNorm());
+    for (auto i = 0; i<this->numVars; i++) {
+        auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[i]));
+        auto term = (uint)genotypeAntecedent->realValue[i];
+
+        antecedent->addClause(*(new Clause(var, term)));
+    }
+
+    // -1 -> SELL
+    // 1  -> BUY
+    auto consequent = new MultipleConstantConsequent({-1, 1}, {genotypeConsequent->realValue[0], genotypeConsequent->realValue[1]});
+
+    return make_shared<Rule>(*antecedent, *consequent);
 }

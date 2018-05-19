@@ -10,7 +10,6 @@
 int main(int argc, char **argv) {
     StateP state (new State);
     state->setEvalOp((ClassifierFTSEvalOpP) new ClassifierFTSEvalOp);
-    //state->addOperator((BestIndividualOperatorP) new BestIndividualOperator);
 
     state->initialize(argc, argv);
 

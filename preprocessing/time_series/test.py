@@ -6,14 +6,11 @@ Created on Thu Apr 12 11:48:41 2018
 """
 
 import pandas as pd
+from fin_time_series.financial_time_series import *
 
-df = pd.read_csv("pigs.csv")
-df = df.set_index("Month")
+df = pd.read_csv("../../data/SP500.csv")
+df = df.set_index("Date")
 
-df['Value_out'] = df['Value'].shift(-1)
-df = df.dropna()
-df.Value_out = df.Value_out.astype(int)
+moving_average(df['Close']).plot()
 
-print(df.dtypes)
 
-df.to_csv("pigs_prep.csv")
