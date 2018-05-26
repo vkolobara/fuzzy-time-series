@@ -30,11 +30,12 @@ def bollinger_bands(df, n):
     B2 = pd.Series(b2, name='BollingerB2_' + str(n))
     return ret.join(B2)
 
-def stochastic_oscillator_k(df):
+def stochastic_oscillator_k(df, n):
     """
     Calculates stochastic_oscillator_k for current prices.
     """
-    sok = pd.Series((df['Close'] - df['Low']) / (df['High'] - df['Low']), name='SOk')
+    l, h = df['Close'].rolling(window=n, center=False).min(), df['Close'].rolling(window=n, center=False).max()
+    sok = pd.Series((df['Close'] - l) / (h - l), name='SOk')
     return df.join(sok)
 
 def stochastic_oscillator_d(df, n):
@@ -55,3 +56,21 @@ def macd(df, n_fast=15, n_slow=26):
     macd_signal = pd.Series(macd.ewm(span=9, min_periods=9).mean(), name='MACDSign_' + str(n_fast) + '_' + str(n_slow))
     macd_diff = pd.Series(macd - macd_signal, name='MACDDiff_' + str(n_fast) + '_' + str(n_slow))
     return df.join(macd).join(macd_signal).join(macd_diff)
+
+def relative_strength_index(df, n):
+    """
+    Calculates the Relative Strength Index (RSI) with n as window size.
+    """
+    
+    delta = df['Close'].diff()[1:]
+    print(delta)
+    
+    delta_up, delta_down = delta.copy(), delta.copy()
+    
+    delta_up[delta_up < 0] = 0
+    delta_down[delta_down > 0] = 0
+    
+    RS = delta_up.ewm(span=n).mean() / delta_down.abs().ewm(span=n).mean()
+    RSI = pd.Series(100.0 - (100.0 / (1.0 + RS)), name='RSI_' + str(n))    
+    
+    return df.join(RSI)

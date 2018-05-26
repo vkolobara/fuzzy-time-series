@@ -10,11 +10,21 @@
 class FinTimeSeriesEvalOp : public ClassifierFTSEvalOp {
 
 public:
+
+    shared_ptr<Dataset> testDataset;
+
     FitnessP evaluate(IndividualP individual) override;
+
+    FitnessP evaluate(IndividualP individual, shared_ptr<Dataset> dataset);
 
     bool initialize(StateP p) override;
 
-    shared_ptr<Rule> genotypeToRule(IndividualP individual) override;
+    void registerParameters(StateP) override;
+
+    //shared_ptr<Rule> genotypeToRule(IndividualP individual) override;
+
+    vector<shared_ptr<Rule>> genotypeToRules(IndividualP individual);
+
 };
 
 typedef boost::shared_ptr<FinTimeSeriesEvalOp> FinTimeSeriesEvalOpP;

@@ -8,18 +8,30 @@ Created on Thu Apr 12 11:48:41 2018
 import pandas as pd
 from fin_time_series.financial_time_series import *
 
-df = pd.read_csv("../data/SP500.csv")
-df = df.set_index("Date")
+df = pd.read_csv("../data/ohlc_bitfinex_btcusd_21600.csv").drop_duplicates(['CloseTime'])
+df = df.set_index("CloseTime")
 
-test = moving_average(df, 7)
-test = bollinger_bands(test, 7)
-test = stochastic_oscillator_k(test)
-test = stochastic_oscillator_d(test, 7)
+
+df = df.rename(columns={
+            "ClosePrice":"Close",
+            "LowPrice":"Low",
+            "OpenPrice":"Open",
+            "HighPrice":"High"
+        })
+
+df = df[df['Close'] > 0.5]
+
+test = stochastic_oscillator_k(df, 60)
+test = relative_strength_index(test, 60)
 test = macd(test)
-test['pred'] = test.shift(-1)['Close']
+test['pct_change'] = test['Close'].pct_change()
+test['pred'] = test.shift(-1)['Open']
 
-test = test[['Close', 'Volume', 'MA_7', 'BollingerB1_7', 'BollingerB2_7', 'SOk', 'SOd_7', 'MACD_15_26', 'MACDSign_15_26', 'MACDDiff_15_26', 'pred']].dropna()
+test = test[['pct_change', 'Volume', 'SOk', 'RSI_60', 'pred']].dropna()
 
-test = test[['Close']].dropna()
+split_ix = int(test.shape[0] * 0.7)
 
-test.to_csv('../data/SP500_prep_price.csv', index=False)
+#test = test[['Close']].dropna()
+
+test.iloc[:split_ix].to_csv('../data/btcusd_6h_prep.csv', index=False)
+test.iloc[split_ix:].to_csv('../data/btcusd_6h_prep_test.csv', index=False)

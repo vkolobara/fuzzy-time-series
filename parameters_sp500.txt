@@ -17,19 +17,18 @@
         </FloatingPoint>
 	</Genotype>
 	<Registry>
-        <Entry key="population.demes">10</Entry>
-        <Entry key="migration.freq">10</Entry>
-        <Entry key="migration.number">5</Entry>
-
-	    <Entry key="data.input">data/SP500_prep_price.csv</Entry>
-	    <Entry key="fuzzy.langvars">conf/sp500_price.conf</Entry>
-	    <Entry key="fuzzy.numrules">10</Entry>
+	    <Entry key="data.input">data/btcusd_6h_prep.csv</Entry>
+	    <Entry key="data.test">data/btcusd_6h_prep_test.csv</Entry>
+	    <Entry key="fuzzy.langvars">conf/btcusd_6h.conf</Entry>
+	    <Entry key="fuzzy.numrules">20</Entry>
 
 		<Entry key="population.size">50</Entry>
 		<Entry key="mutation.indprob">0.7</Entry>
-		<Entry key="term.maxgen">20000</Entry>
-		<Entry key="term.eval">100000</Entry>
+		<Entry key="term.maxgen">1000</Entry>
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>
+		<Entry key="milestone.filename">out.txt</Entry>
+        <Entry key="milestone.interval">10</Entry>
+
 	</Registry>
 </ECF>

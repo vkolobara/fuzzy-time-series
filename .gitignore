@@ -38,3 +38,4 @@ build
 
 *.pyc
 **/__pycache__
+data

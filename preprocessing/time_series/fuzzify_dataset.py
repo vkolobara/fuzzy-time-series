@@ -107,16 +107,18 @@ class LambdaTerm(JSONable):
     def __str__(self):
         return "{3}\tLAMBDA\t{0},{1},{2}".format(self.a, self.b, self.c, self.name)
 
-def generate_trapeizodal_lang_var(df, name, domain_step, var_type, n=7):    
+def generate_trapeizodal_lang_var(df, name, domain_step, var_type, n=7, ignore_std=False):    
 
     df_col = df[name]
-    df_std = df_col.std()
-    df_min = df_col.min()
-    df_max = df_col.max()
-    
-    u_min = df_min - df_std
-    u_max = df_max + df_std
-    
+
+    u_min = df_col.min()
+    u_max = df_col.max()
+
+    if not ignore_std:
+        df_std = df_col.std()
+        u_min = u_min - df_std
+        u_max = u_max + df_std
+        
     u_range = u_max - u_min
     
     u_S = u_range / (2*n + 1)
@@ -138,13 +140,13 @@ def fuzzify_vars():
     n_in = conf['in_terms']
     n_out = conf['out_terms']
 
-    lang_vars = [generate_trapeizodal_lang_var(df, name, step, var_type, n_in) for
-                 (name, step, var_type) in conf["in_var_names"]]
+    lang_vars = [generate_trapeizodal_lang_var(df, name, step, var_type, n_in, ignore_std) for
+                 (name, step, var_type, ignore_std) in conf["in_var_names"]]
 
     if 'out_var_name' in conf:
-        (name, step, var_type) = conf['out_var_name']
+        (name, step, var_type, ignore_std) = conf['out_var_name']
         lang_vars.append(generate_trapeizodal_lang_var(df, name, step, var_type,
-                                                   n_out))
+                                                   n_out, ignore_std))
     return lang_vars
 
 def main():

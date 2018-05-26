@@ -125,6 +125,7 @@ shared_ptr<Rule> ClassifierFTSEvalOp::genotypeToRule(IndividualP individual) {
     return make_shared<Rule>(*antecedent, *consequent);
 }
 
+
 vector<shared_ptr<Rule>> ClassifierFTSEvalOp::genotypeToRules(IndividualP individual) {
 
     vector<shared_ptr<Rule>> rules(this->numRules);
