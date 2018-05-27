@@ -1,13 +1,13 @@
 //
-// Created by Vinko Kolobara on 19. 5. 2018..
+// Created by Vinko Kolobara on 27. 5. 2018..
 //
 
 #include <ECF/ECF.h>
-#include "FinTimeSeriesEvalOp.h"
+#include "ANFISEvalOp.h"
 
 int main(int argc, char **argv) {
     StateP state (new State);
-    state->setEvalOp((FinTimeSeriesEvalOpP) new FinTimeSeriesEvalOp);
+    state->setEvalOp((ANFISEvalOpP) new ANFISEvalOp);
 
     state->initialize(argc, argv);
 
