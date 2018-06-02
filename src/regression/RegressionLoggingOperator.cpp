@@ -2,28 +2,30 @@
 // Created by vkolobara on 3/30/18.
 //
 
-#include "BestIndividualOperator.h"
-#include "ClassifierFTSEvalOp.h"
+#include "RegressionLoggingOperator.h"
+#include "../classification/ClassifierFTSEvalOp.h"
+#include "RegressionFTSEvalOp.h"
 
-bool BestIndividualOperator::operate(StateP state) {
-    auto selOp = make_shared<SelFitnessProportionalOp>();
-    selOp->initialize(state);
-    auto evalOp = (ClassifierFTSEvalOp*)(state->getEvalOp().get());
+bool RegressionLoggingOperator::operate(StateP state) {
 
-    auto individuals = state->getPopulation()->getLocalDeme();
+    auto evalOp = (RegressionFTSEvalOp*)(state->getEvalOp().get());
+    if (evalOp->fileLogger)
+        evalOp->fileLogger->log(state->getGenerationNo(), evaluate(state, evalOp->dataset), evaluate(state, evalOp->testDataset));
 
-    vector<boost::shared_ptr<Individual>> selected(evalOp->numRules);
+    return true;
+}
 
-    for (auto i=0; i<state->getPopulation()->getNoDemes(); i++) {
-        selected[i] = selOp->select(*state->getPopulation()->at(i).get());
-    }
+double RegressionLoggingOperator::evaluate(StateP state, shared_ptr<Dataset> dataset) {
+
+    auto evalOp = (RegressionFTSEvalOp*)(state->getEvalOp().get());
+
+    auto selected = state->getHoF()->getBest();
 
     vector<shared_ptr<Rule>> rules;
-    auto dataset = evalOp->dataset;
+
     auto knowledgeBase = evalOp->knowledgeBase;
     auto variableNames = evalOp->variableNames;
 
-    double fitnessVal = 0;
     for (auto sel : selected) {
         rules.push_back(shared_ptr<Rule>(evalOp->genotypeToRule(sel)));
     }
@@ -49,15 +51,9 @@ bool BestIndividualOperator::operate(StateP state) {
         if (sum <= 1e-6) sum = 1;
         auto conclusion = sumC / sum;
 
-        //cout << "REAL: " << row->values.back() << "; PRED: " << conclusion << endl;
-
         sumFit += evalOp->errorFunction->error(row->values.back(), conclusion);
     }
 
-    fitnessVal = sumFit / dataset->getNumRows();
+    return sumFit / dataset->getNumRows();
 
-    cout << "FITNESS VAL: " << fitnessVal << endl << endl;
-
-
-    return true;
 }

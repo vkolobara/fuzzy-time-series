@@ -3,14 +3,14 @@
 //
 
 #include <ECF/ECF.h>
-#include "ClassifierFTSEvalOp.h"
-#include "BestIndividualOperator.h"
+#include "../classification/ClassifierFTSEvalOp.h"
+#include "RegressionLoggingOperator.h"
 #include "RegressionFTSEvalOp.h"
 
 int main(int argc, char **argv) {
     StateP state (new State);
     state->setEvalOp((RegressionFTSEvalOpP) new RegressionFTSEvalOp);
-    state->addOperator((BestIndividualOperatorP) new BestIndividualOperator);
+    state->addOperator((BestIndividualOperatorP) new RegressionLoggingOperator);
 
     state->initialize(argc, argv);
 

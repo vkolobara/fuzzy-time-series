@@ -6,8 +6,8 @@
 #define FUZZY_TIME_SERIES_ANFISEVALOP_H
 
 #include "ECF/ECF.h"
-#include "dataset/Dataset.h"
-#include "ClassifierFTSEvalOp.h"
+#include "../dataset/Dataset.h"
+#include "../classification/ClassifierFTSEvalOp.h"
 #include "ANFIS/layer/ANFIS.h"
 
 class ANFISEvalOp : public ClassifierFTSEvalOp {

@@ -5,35 +5,7 @@
 #include "ClassifierFTSEvalOp.h"
 
 FitnessP ClassifierFTSEvalOp::evaluate(IndividualP individual) {
-    FitnessP fitness (new FitnessMin);
-
-    double fitnessVal = 0.0;
-
-    auto rules = genotypeToRules(individual);
-
-    for (auto row : dataset->dataset) {
-
-        for (auto i = 0; i < row->values.size()-1; i++) {
-           knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
-        }
-
-        double conclusion = 0;
-        double bestActivation = 0;
-
-        for (auto rule : rules) {
-
-            double activation = rule->antecedent->getActivation();
-
-            if (activation >= bestActivation) {
-                conclusion = rule->consequent->membership();
-                bestActivation = activation;
-            }
-        }
-        fitnessVal += this->errorFunction->error(row->values.back(), conclusion);
-    }
-
-    fitness->setValue(fitnessVal/dataset->getNumRows());
-    return fitness;
+    return evaluate(individual, dataset);
 }
 
 void ClassifierFTSEvalOp::registerParameters(StateP state) {
@@ -45,6 +17,10 @@ void ClassifierFTSEvalOp::registerParameters(StateP state) {
 
     //register entry fuzzy.numrules for the number of rules
     state->getRegistry()->registerEntry("fuzzy.numrules", (voidP) (new uint(1)), ECF::UINT);
+
+    state->getRegistry()->registerEntry("data.test", (voidP) (new std::string), ECF::STRING);
+
+    state->getRegistry()->registerEntry("operator.logfile", (voidP) (new std::string), ECF::STRING);
 }
 
 bool ClassifierFTSEvalOp::initialize(StateP state) {
@@ -62,9 +38,21 @@ bool ClassifierFTSEvalOp::initialize(StateP state) {
     }
 
     //get registered entry and parse the file with LanguageVariablesParser
+    if (!state->getRegistry()->isModified("data.test")) {
+        ECF_LOG_ERROR(state, "Error: no test data file defined! (parameter 'data.test'");
+        return false;
+    }
+
+    //get registered entry and parse the file with LanguageVariablesParser
     if(!state->getRegistry()->isModified("fuzzy.numrules")) {
         ECF_LOG_ERROR(state, "Error: no number of rules defined! (parameter 'fuzzy.numrules'");
         return false;
+    }
+
+    if (state->getRegistry()->isModified("operator.logfile")) {
+        voidP sptr = state->getRegistry()->getEntry("operator.logfile"); // get parameter value
+        string filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
+        this->fileLogger = make_shared<FileLogger>(filePath);
     }
 
     voidP sptr = state->getRegistry()->getEntry("fuzzy.langvars"); // get parameter value
@@ -88,6 +76,10 @@ bool ClassifierFTSEvalOp::initialize(StateP state) {
     filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
 
     this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
+
+    sptr = state->getRegistry()->getEntry("data.test"); // get parameter value
+    filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
+    this->testDataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
 
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
     this->numRules = *((uint*) sptr.get());
@@ -149,4 +141,36 @@ vector<shared_ptr<Rule>> ClassifierFTSEvalOp::genotypeToRules(IndividualP indivi
     }
 
     return rules;
+}
+
+FitnessP ClassifierFTSEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset) {
+    FitnessP fitness (new FitnessMin);
+
+    double fitnessVal = 0.0;
+
+    auto rules = genotypeToRules(individual);
+
+    for (auto row : dataset->dataset) {
+
+        for (auto i = 0; i < row->values.size()-1; i++) {
+            knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
+        }
+
+        double conclusion = 0;
+        double bestActivation = 0;
+
+        for (auto rule : rules) {
+
+            double activation = rule->antecedent->getActivation();
+
+            if (activation >= bestActivation) {
+                conclusion = rule->consequent->membership();
+                bestActivation = activation;
+            }
+        }
+        fitnessVal += this->errorFunction->error(row->values.back(), conclusion);
+    }
+
+    fitness->setValue(fitnessVal/dataset->getNumRows());
+    return fitness;
 }

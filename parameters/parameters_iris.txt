@@ -17,6 +17,7 @@
         </FloatingPoint>
 	</Genotype>
 	<Registry>
+	    <Entry key="operator.logfile">log/iris.log</Entry>
 	    <Entry key="data.input">data/iris.data</Entry>
 	    <Entry key="fuzzy.langvars">conf/iris.conf</Entry>
 	    <Entry key="fuzzy.numrules">10</Entry>

@@ -16,6 +16,7 @@
 	    <Entry key="migration.freq">10</Entry>
         <Entry key="migration.number">5</Entry>
 
+	    <Entry key="operator.logfile">log/pigs.log</Entry>
 	    <Entry key="data.input">data/pigs_prep.csv</Entry>
 	    <Entry key="fuzzy.langvars">conf/pigs.conf</Entry>
 	    <Entry key="fuzzy.numrules">10</Entry>

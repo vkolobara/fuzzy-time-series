@@ -7,15 +7,15 @@ set(fuzzy-time-series_VERSION_MINOR 0)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-        src/ClassifierFTSEvalOp.cpp src/ClassifierFTSEvalOp.h src/dataset/Dataset.cpp src/dataset/Dataset.h src/dataset/DataRow.cpp src/dataset/DataRow.h src/ErrorFunction.cpp src/ErrorFunction.h)
+        src/classification/ClassifierFTSEvalOp.cpp src/classification/ClassifierFTSEvalOp.h src/dataset/Dataset.cpp src/dataset/Dataset.h src/dataset/DataRow.cpp src/dataset/DataRow.h src/ErrorFunction.cpp src/ErrorFunction.h src/FileLogger.cpp src/FileLogger.h)
 
 add_subdirectory(lib/ECF)
 add_subdirectory(lib/fuzzy-inference-system)
 
-add_executable(fts-regression src/main_regression.cpp ${SOURCE_FILES})
-add_executable(fts-classification src/main_classification.cpp ${SOURCE_FILES} src/RegressionFTSEvalOp.cpp src/RegressionFTSEvalOp.h src/BestIndividualOperator.cpp src/BestIndividualOperator.h src/ANFISEvalOp.cpp src/ANFISEvalOp.h src/main_anfis.cpp)
-add_executable(fts-financial src/main_financial.cpp ${SOURCE_FILES} src/FinTimeSeriesEvalOp.cpp src/FinTimeSeriesEvalOp.h)
-add_executable(fts-anfis src/main_anfis.cpp ${SOURCE_FILES} src/ANFISEvalOp.h src/ANFISEvalOp.cpp)
+add_executable(fts-regression src/regression/RegressionLoggingOperator.h src/regression/main_regression.cpp ${SOURCE_FILES})
+add_executable(fts-classification src/classification/main_classification.cpp ${SOURCE_FILES} src/regression/RegressionFTSEvalOp.cpp src/regression/RegressionFTSEvalOp.h src/regression/RegressionLoggingOperator.cpp src/regression/RegressionLoggingOperator.h src/anfis/ANFISEvalOp.cpp src/anfis/ANFISEvalOp.h src/anfis/main_anfis.cpp src/classification/ClassificationLoggingOperator.cpp src/classification/ClassificationLoggingOperator.h)
+add_executable(fts-financial src/financial/main_financial.cpp ${SOURCE_FILES} src/financial/FinTimeSeriesEvalOp.cpp src/financial/FinTimeSeriesEvalOp.h src/financial/FinancialLoggingOperator.cpp src/financial/FinancialLoggingOperator.h)
+add_executable(fts-anfis src/anfis/main_anfis.cpp ${SOURCE_FILES} src/anfis/ANFISEvalOp.h src/anfis/ANFISEvalOp.cpp)
 
 target_include_directories(fts-regression PRIVATE lib/ECF)
 target_include_directories(fts-regression PRIVATE lib/fuzzy-inference-system)

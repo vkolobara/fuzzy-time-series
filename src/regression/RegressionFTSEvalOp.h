@@ -6,7 +6,7 @@
 #define FUZZY_TIME_SERIES_CLASSIFICATIONFTSEVALOP_H
 
 
-#include "ClassifierFTSEvalOp.h"
+#include "classification/ClassifierFTSEvalOp.h"
 
 class RegressionFTSEvalOp : public ClassifierFTSEvalOp {
 
@@ -16,6 +16,8 @@ public:
     bool initialize(StateP p) override;
 
     shared_ptr<Rule> genotypeToRule(IndividualP individual) override;
+
+    FitnessP evaluate(IndividualP individual, shared_ptr<Dataset> dataset) override;
 };
 
 typedef boost::shared_ptr<RegressionFTSEvalOp> RegressionFTSEvalOpP;

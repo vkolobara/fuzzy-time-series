@@ -5,8 +5,6 @@
 #include "FinTimeSeriesEvalOp.h"
 
 FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual) {
-
-    cout << "TEST VALUE: " << evaluate(individual, this->testDataset)->getValue() << endl;
     return evaluate(individual, this->dataset);
 }
 
@@ -25,14 +23,14 @@ bool FinTimeSeriesEvalOp::initialize(StateP state) {
     }
 
     //get registered entry and parse the file with LanguageVariablesParser
-    if (!state->getRegistry()->isModified("data.test")) {
-        ECF_LOG_ERROR(state, "Error: no test data file defined! (parameter 'data.test'");
+    if (!state->getRegistry()->isModified("fuzzy.numrules")) {
+        ECF_LOG_ERROR(state, "Error: no number of rules defined! (parameter 'fuzzy.numrules'");
         return false;
     }
 
     //get registered entry and parse the file with LanguageVariablesParser
-    if (!state->getRegistry()->isModified("fuzzy.numrules")) {
-        ECF_LOG_ERROR(state, "Error: no number of rules defined! (parameter 'fuzzy.numrules'");
+    if(!state->getRegistry()->isModified("data.balance")) {
+        ECF_LOG_ERROR(state, "Error: no start balance specified! (parameter 'data.balance'");
         return false;
     }
 
@@ -56,11 +54,10 @@ bool FinTimeSeriesEvalOp::initialize(StateP state) {
     sptr = state->getRegistry()->getEntry("data.input"); // get parameter value
     filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
 
+    startBalance = *((double *) state->getRegistry()->getEntry("data.balance").get());
+
     this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
 
-    sptr = state->getRegistry()->getEntry("data.test"); // get parameter value
-    filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
-    this->testDataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
 
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
     this->numRules = *((uint *) sptr.get());
@@ -127,16 +124,9 @@ vector<shared_ptr<Rule>> FinTimeSeriesEvalOp::genotypeToRules(IndividualP indivi
     return rules;
 }
 
-void FinTimeSeriesEvalOp::registerParameters(StateP state) {
-    ClassifierFTSEvalOp::registerParameters(state);
-
-    //register entry data.input for the data file
-    state->getRegistry()->registerEntry("data.test", (voidP) (new std::string), ECF::STRING);
-}
-
 FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset) {
     FitnessP fitness(new FitnessMax);
-    const double START_BALANCE = 50000.0;
+    const double START_BALANCE = startBalance;
 
     auto rules = genotypeToRules(individual);
 
@@ -241,4 +231,10 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
     fitness->setValue(balance/START_BALANCE);
 
     return fitness;
+}
+
+void FinTimeSeriesEvalOp::registerParameters(StateP state) {
+    ClassifierFTSEvalOp::registerParameters(state);
+
+    state->getRegistry()->registerEntry("data.balance", (voidP) (new double(1)), ECF::DOUBLE);
 }

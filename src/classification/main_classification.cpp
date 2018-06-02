@@ -4,8 +4,8 @@
 
 #include <ECF/ECF.h>
 #include "ClassifierFTSEvalOp.h"
-#include "BestIndividualOperator.h"
-#include "RegressionFTSEvalOp.h"
+#include "../regression/RegressionLoggingOperator.h"
+#include "../regression/RegressionFTSEvalOp.h"
 
 int main(int argc, char **argv) {
     StateP state (new State);

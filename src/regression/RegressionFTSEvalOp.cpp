@@ -5,27 +5,7 @@
 #include "RegressionFTSEvalOp.h"
 
 FitnessP RegressionFTSEvalOp::evaluate(IndividualP individual) {
-    FitnessP fitness(new FitnessMin);
-
-    double fitnessVal = 0.0;
-
-    auto rule = genotypeToRule(individual);
-
-    for (auto row : dataset.get()->dataset) {
-        for (auto i = 0; i < row->values.size() - 1; i++) {
-            knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
-        }
-
-        auto activation = rule->antecedent.get()->getActivation();
-        auto consequent = static_pointer_cast<LinearVariableConsequent>(rule->consequent);
-
-        auto conclusion = activation * consequent->membership();
-
-        fitnessVal += this->errorFunction->error(row->values.back(), conclusion);
-    }
-
-    fitness->setValue(fitnessVal / dataset.get()->getNumRows());
-    return fitness;
+    return evaluate(individual, dataset);
 }
 
 shared_ptr<Rule> RegressionFTSEvalOp::genotypeToRule(IndividualP individual) {
@@ -64,6 +44,12 @@ bool RegressionFTSEvalOp::initialize(StateP state) {
     }
 
     //get registered entry and parse the file with LanguageVariablesParser
+    if (!state->getRegistry()->isModified("data.test")) {
+        ECF_LOG_ERROR(state, "Error: no test data file defined! (parameter 'data.test'");
+        return false;
+    }
+
+    //get registered entry and parse the file with LanguageVariablesParser
     if (!state->getRegistry()->isModified("fuzzy.numrules")) {
         ECF_LOG_ERROR(state, "Error: no number of rules defined! (parameter 'fuzzy.numrules'");
         return false;
@@ -91,6 +77,10 @@ bool RegressionFTSEvalOp::initialize(StateP state) {
 
     this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
 
+    sptr = state->getRegistry()->getEntry("data.test"); // get parameter value
+    filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
+    this->testDataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
+
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
     this->numRules = *((uint *) sptr.get());
 
@@ -104,4 +94,28 @@ bool RegressionFTSEvalOp::initialize(StateP state) {
 
     this->errorFunction = make_shared<MeanAbsolutePercentageError>();
     return true;
+}
+
+FitnessP RegressionFTSEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset) {
+    FitnessP fitness(new FitnessMin);
+
+    double fitnessVal = 0.0;
+
+    auto rule = genotypeToRule(individual);
+
+    for (auto row : dataset.get()->dataset) {
+        for (auto i = 0; i < row->values.size() - 1; i++) {
+            knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
+        }
+
+        auto activation = rule->antecedent.get()->getActivation();
+        auto consequent = static_pointer_cast<LinearVariableConsequent>(rule->consequent);
+
+        auto conclusion = activation * consequent->membership();
+
+        fitnessVal += this->errorFunction->error(row->values.back(), conclusion);
+    }
+
+    fitness->setValue(fitnessVal / dataset.get()->getNumRows());
+    return fitness;
 }

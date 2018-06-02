@@ -5,25 +5,23 @@
 #ifndef FUZZY_TIME_SERIES_FINTIMESERIESEVALOP_H
 #define FUZZY_TIME_SERIES_FINTIMESERIESEVALOP_H
 
-#include "ClassifierFTSEvalOp.h"
+#include "../classification/ClassifierFTSEvalOp.h"
 
 class FinTimeSeriesEvalOp : public ClassifierFTSEvalOp {
 
 public:
-
-    shared_ptr<Dataset> testDataset;
+    double startBalance;
 
     FitnessP evaluate(IndividualP individual) override;
 
-    FitnessP evaluate(IndividualP individual, shared_ptr<Dataset> dataset);
+    FitnessP evaluate(IndividualP individual, shared_ptr<Dataset> dataset) override;
 
     bool initialize(StateP p) override;
 
     void registerParameters(StateP) override;
-
     //shared_ptr<Rule> genotypeToRule(IndividualP individual) override;
 
-    vector<shared_ptr<Rule>> genotypeToRules(IndividualP individual);
+    vector<shared_ptr<Rule>> genotypeToRules(IndividualP individual) override;
 
 };
 
