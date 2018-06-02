@@ -6,7 +6,7 @@
 #define FUZZY_TIME_SERIES_CLASSIFICATIONFTSEVALOP_H
 
 
-#include "classification/ClassifierFTSEvalOp.h"
+#include "../classification/ClassifierFTSEvalOp.h"
 
 class RegressionFTSEvalOp : public ClassifierFTSEvalOp {
 
