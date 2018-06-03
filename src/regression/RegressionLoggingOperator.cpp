@@ -19,7 +19,14 @@ double RegressionLoggingOperator::evaluate(StateP state, shared_ptr<Dataset> dat
 
     auto evalOp = (RegressionFTSEvalOp*)(state->getEvalOp().get());
 
-    auto selected = state->getHoF()->getBest();
+    auto selOp = (SelFitnessProportionalOpP) new SelFitnessProportionalOp;
+    selOp->initialize(state);
+
+    vector<IndividualP> selected(evalOp->numRules);
+
+    for (auto i=0; i < state->getPopulation()->getNoDemes(); i++) {
+        selected[i] = selOp->select(*state->getPopulation()->at(i));
+    }
 
     vector<shared_ptr<Rule>> rules;
 

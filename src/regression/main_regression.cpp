@@ -10,7 +10,7 @@
 int main(int argc, char **argv) {
     StateP state (new State);
     state->setEvalOp((RegressionFTSEvalOpP) new RegressionFTSEvalOp);
-    state->addOperator((BestIndividualOperatorP) new RegressionLoggingOperator);
+    state->addOperator((RegressionLoggingOperatorP) new RegressionLoggingOperator);
 
     state->initialize(argc, argv);
 

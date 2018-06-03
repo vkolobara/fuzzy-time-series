@@ -7,7 +7,7 @@
 	<Genotype>
 		<FloatingPoint>
 			<Entry key="lbound">0</Entry>
-			<Entry key="ubound">3</Entry>
+			<Entry key="ubound">7</Entry>
 			<Entry key="dimension">20</Entry>
 		</FloatingPoint>
 	    <FloatingPoint>
@@ -18,14 +18,14 @@
 	</Genotype>
 	<Registry>
 	    <Entry key="operator.logfile">log/iris.log</Entry>
-	    <Entry key="data.input">data/iris.data</Entry>
-	    <Entry key="data.test">data/iris.data</Entry>
+	    <Entry key="data.input">data/train/iris.csv</Entry>
+	    <Entry key="data.test">data/test/iris.csv</Entry>
 
 	    <Entry key="fuzzy.langvars">conf/iris.conf</Entry>
 	    <Entry key="fuzzy.numrules">10</Entry>
 		<Entry key="population.size">100</Entry>
-		<Entry key="mutation.indprob">0.7</Entry>
-		<Entry key="term.eval">10000</Entry>
+		<Entry key="mutation.indprob">0.3</Entry>
+		<Entry key="term.eval">100000</Entry>
 
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>

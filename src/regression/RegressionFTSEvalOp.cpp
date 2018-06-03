@@ -55,6 +55,12 @@ bool RegressionFTSEvalOp::initialize(StateP state) {
         return false;
     }
 
+    if (state->getRegistry()->isModified("operator.logfile")) {
+        voidP sptr = state->getRegistry()->getEntry("operator.logfile"); // get parameter value
+        string filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
+        this->fileLogger = make_shared<FileLogger>(filePath);
+    }
+
     voidP sptr = state->getRegistry()->getEntry("fuzzy.langvars"); // get parameter value
     string filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
 

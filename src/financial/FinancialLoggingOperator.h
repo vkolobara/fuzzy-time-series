@@ -6,8 +6,7 @@
 #define FUZZY_TIME_SERIES_FINANCIALLOGGINGOPERATOR_H
 
 
-#include <ECF/Operator.h>
-#include <boost/shared_ptr.hpp>
+#include <ECF/ECF.h>
 
 class FinancialLoggingOperator : public Operator {
 public:

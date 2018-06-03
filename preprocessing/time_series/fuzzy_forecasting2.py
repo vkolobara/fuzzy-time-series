@@ -80,7 +80,7 @@ print()
 print("MAPE:" + str(100*mape/(len(values)-1)))
 print("MSE:" + str(mse / (len(values) - 1) ))
 print(dct)
-print(len(dct))
 
-plt.plot(preds)
-plt.plot(values[2:])
+with open("pigs_rule_2.txt", 'w') as f:
+    for k in dct:
+        f.write(str(k) + ":" + str(dct[k]) + "\n")

@@ -2,7 +2,6 @@
 // Created by vkolobara on 6/2/18.
 //
 
-#include <ECF/Communicator.h>
 #include "FinancialLoggingOperator.h"
 #include "FinTimeSeriesEvalOp.h"
 

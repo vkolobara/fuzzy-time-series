@@ -23,6 +23,12 @@ bool FinTimeSeriesEvalOp::initialize(StateP state) {
     }
 
     //get registered entry and parse the file with LanguageVariablesParser
+    if (!state->getRegistry()->isModified("data.test")) {
+        ECF_LOG_ERROR(state, "Error: no test data file defined! (parameter 'data.test'");
+        return false;
+    }
+
+    //get registered entry and parse the file with LanguageVariablesParser
     if (!state->getRegistry()->isModified("fuzzy.numrules")) {
         ECF_LOG_ERROR(state, "Error: no number of rules defined! (parameter 'fuzzy.numrules'");
         return false;
@@ -32,6 +38,12 @@ bool FinTimeSeriesEvalOp::initialize(StateP state) {
     if(!state->getRegistry()->isModified("data.balance")) {
         ECF_LOG_ERROR(state, "Error: no start balance specified! (parameter 'data.balance'");
         return false;
+    }
+
+    if (state->getRegistry()->isModified("operator.logfile")) {
+        voidP sptr = state->getRegistry()->getEntry("operator.logfile"); // get parameter value
+        string filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
+        this->fileLogger = make_shared<FileLogger>(filePath);
     }
 
     voidP sptr = state->getRegistry()->getEntry("fuzzy.langvars"); // get parameter value
@@ -57,6 +69,11 @@ bool FinTimeSeriesEvalOp::initialize(StateP state) {
     startBalance = *((double *) state->getRegistry()->getEntry("data.balance").get());
 
     this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
+
+    sptr = state->getRegistry()->getEntry("data.test"); // get parameter value
+    filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
+    this->testDataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
+
 
 
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
@@ -215,7 +232,7 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
 
     balance += dataset->dataset.back()->values.back() * longPosition;
     balance -= dataset->dataset.back()->values.back() * shortPosition * 1.5;
-
+    /*
     if (balance/START_BALANCE > 1) {
         cout << "BALANCE: " << balance << endl <<  "BOUGHT: ";
         for (auto i = timeBought.begin(); i != timeBought.end(); ++i)
@@ -227,6 +244,7 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
 
         cout << endl << endl;
     }
+     */
 
     fitness->setValue(balance/START_BALANCE);
 
@@ -235,6 +253,5 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
 
 void FinTimeSeriesEvalOp::registerParameters(StateP state) {
     ClassifierFTSEvalOp::registerParameters(state);
-
     state->getRegistry()->registerEntry("data.balance", (voidP) (new double(1)), ECF::DOUBLE);
 }

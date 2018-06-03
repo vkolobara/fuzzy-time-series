@@ -74,6 +74,6 @@ print("MSE:" + str(mse / (len(values) - 1) ))
 print(dct)
 print(len(dct))
 
-preds = np.array(preds)
-plt.plot(preds)
-plt.plot(values[1:])
+with open('pigs_rule_1.txt', 'w') as f:
+    for k in dct:
+        f.write(str(k) + ":" + str(dct[k]) + "\n")
