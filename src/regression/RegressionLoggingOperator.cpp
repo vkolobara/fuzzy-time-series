@@ -9,8 +9,19 @@
 bool RegressionLoggingOperator::operate(StateP state) {
 
     auto evalOp = (RegressionFTSEvalOp*)(state->getEvalOp().get());
-    if (evalOp->fileLogger)
-        evalOp->fileLogger->log(state->getGenerationNo(), evaluate(state, evalOp->dataset), evaluate(state, evalOp->testDataset));
+    if (evalOp->fileLogger) {
+        double trainFit = 0.0;
+        double testFit = 0.0;
+
+        auto numTries = 3;
+
+        for (auto i = 0; i < numTries; i++) {
+            trainFit += evaluate(state, evalOp->dataset);
+            testFit += evaluate(state, evalOp->testDataset);\
+        }
+        evalOp->fileLogger->log(state->getGenerationNo(), trainFit/numTries,
+                                testFit/numTries);
+    }
 
     return true;
 }

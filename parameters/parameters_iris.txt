@@ -29,5 +29,7 @@
 
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>
+
+		<Entry key="milestone.filename">milestones/iris.txt</Entry>
 	</Registry>
 </ECF>

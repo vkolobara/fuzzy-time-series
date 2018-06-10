@@ -17,17 +17,17 @@
         </FloatingPoint>
 	</Genotype>
 	<Registry>
-	    <Entry key="data.input">data/train/SP500.csv</Entry>
-	    <Entry key="data.test">data/test/SP500.csv</Entry>
-	    <Entry key="data.balance">20000</Entry>
+	    <Entry key="data.input">data/btcusd_6h_prep.csv</Entry>
+	    <Entry key="data.test">data/btcusd_6h_prep_test.csv</Entry>
+	    <Entry key="data.balance">50000</Entry>
 
-	    <Entry key="operator.logfile">log/sp500.log</Entry>
+	    <Entry key="operator.logfile">log/btcusd_6h.log</Entry>
 
 	    <Entry key="fuzzy.langvars">conf/SP500.conf</Entry>
 	    <Entry key="fuzzy.numrules">10</Entry>
 
 		<Entry key="population.size">100</Entry>
-		<Entry key="mutation.indprob">0.7</Entry>
+		<Entry key="mutation.indprob">0.3</Entry>
 		<Entry key="term.maxgen">10000</Entry>
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>
