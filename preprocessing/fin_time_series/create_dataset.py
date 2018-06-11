@@ -25,7 +25,7 @@ df = df.rename(columns={
         })
 
 
-df = df[df['Close'] > 0.5]
+df = df[df['Close'] > 1e-7]
 
 t = int(os.path.splitext(set_name.split('_')[-1])[0])
 
