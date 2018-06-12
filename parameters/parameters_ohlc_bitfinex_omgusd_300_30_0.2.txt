@@ -1,0 +1,38 @@
+<ECF>
+	<Algorithm>
+		<SteadyStateTournament>
+			<Entry key="tsize">3</Entry>
+		</SteadyStateTournament>
+	</Algorithm>
+	<Genotype>
+		<FloatingPoint>
+			<Entry key="lbound">0</Entry>
+			<Entry key="ubound">6.99</Entry>
+			<Entry key="dimension">20</Entry>
+		</FloatingPoint>
+		<FloatingPoint>
+            <Entry key="lbound">0</Entry>
+            <Entry key="ubound">1</Entry>
+            <Entry key="dimension">2</Entry>
+        </FloatingPoint>
+	</Genotype>
+	<Registry>
+	    <Entry key="data.input">data/train/ohlc_bitfinex_omgusd_300.csv</Entry>
+	    <Entry key="data.test">data/test/ohlc_bitfinex_omgusd_300.csv</Entry>
+	    <Entry key="data.balance">139.62534316021424</Entry>
+	    <Entry key="operator.logfile">log/ohlc_bitfinex_omgusd_300.csv</Entry>
+
+	    <Entry key="fuzzy.langvars">conf/ohlc_bitfinex_omgusd_300.conf</Entry>
+	    <Entry key="fuzzy.numrules">20</Entry>
+
+		<Entry key="population.size">30</Entry>
+		<Entry key="mutation.indprob">0.2</Entry>
+
+        <Entry key="milestone.filename" />
+
+		<Entry key="term.maxgen">100000</Entry>
+		<Entry key="log.frequency">10</Entry>
+		<Entry key="log.level">3</Entry>
+
+	</Registry>
+</ECF>
