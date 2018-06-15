@@ -17,18 +17,18 @@
         </FloatingPoint>
 	</Genotype>
 	<Registry>
-	    <Entry key="data.input"></Entry>
-	    <Entry key="data.test"></Entry>
-	    <Entry key="data.balance"></Entry>
-	    <Entry key="operator.logfile"></Entry>
+	    <Entry key="data.input">data/train/ohlc_bitfinex_ethusd_60.csv</Entry>
+	    <Entry key="data.test">data/test/ohlc_bitfinex_ethusd_60.csv</Entry>
+	    <Entry key="data.balance">6281.229232032385</Entry>
+	    <Entry key="operator.logfile">log/ohlc_bitfinex_ethusd_60.csv</Entry>
 
-	    <Entry key="fuzzy.langvars"></Entry>
-	    <Entry key="fuzzy.numrules"></Entry>
+	    <Entry key="fuzzy.langvars">conf/ohlc_bitfinex_ethusd_60.conf</Entry>
+	    <Entry key="fuzzy.numrules">10</Entry>
 
-		<Entry key="population.size"></Entry>
-		<Entry key="mutation.indprob"></Entry>
+		<Entry key="population.size">100</Entry>
+		<Entry key="mutation.indprob">0.2</Entry>
 
-        <Entry key="milestone.filename"></Entry>
+        <Entry key="milestone.filename">milestones/ohlc_bitfinex_ethusd_60.txt</Entry>
 
 		<Entry key="term.eval">100000</Entry>
 		<Entry key="log.frequency">10</Entry>
