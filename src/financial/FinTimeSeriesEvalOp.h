@@ -12,9 +12,13 @@ class FinTimeSeriesEvalOp : public ClassifierFTSEvalOp {
 public:
     double startBalance;
 
+    double threshold;
+
+    uint counter = 0;
+
     FitnessP evaluate(IndividualP individual) override;
 
-    FitnessP evaluate(IndividualP individual, shared_ptr<Dataset> dataset) override;
+    FitnessP evaluate(IndividualP individual, shared_ptr<Dataset> dataset, int numSplits);
 
     bool initialize(StateP p) override;
 

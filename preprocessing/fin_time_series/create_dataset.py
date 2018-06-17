@@ -9,21 +9,24 @@ import pandas as pd
 from financial_time_series import *
 import sys,os
 
-file_path = sys.argv[1]
+#file_path = sys.argv[1]
+file_path = '/home/vkolobara/Downloads/crypto_data/crypto_data/ohlc_bitfinex_btcusd_21600.csv'
 set_name = os.path.splitext(os.path.basename(file_path))[0]
 
 #df = pd.read_csv("../../data/raw/{}.csv".format(set_name), index_col=False).drop_duplicates('CloseTime')
-df = pd.read_csv(file_path, index_col=False).drop_duplicates('CloseTime')
+df = pd.read_csv(file_path, index_col=False)#.drop_duplicates('CloseTime')
 
 df.set_index('CloseTime')
 
-df = df.rename(columns={
-            "ClosePrice":"Close",
-            "LowPrice":"Low",
-            "OpenPrice":"Open",
-            "HighPrice":"High"
-        })
-
+try:
+    df = df.rename(columns={
+                "ClosePrice":"Close",
+                "LowPrice":"Low",
+                "OpenPrice":"Open",
+                "HighPrice":"High"
+            })
+except Exception:
+    pass
 
 df = df[df['Close'] > 1e-7]
 
@@ -46,11 +49,12 @@ test = macd(test)
 test['pct_change'] = test['Close'].pct_change()
 test['pred'] = test.shift(-1)['Open']
 
-test = test[['pct_change', 'Volume', 'SOk', 'RSI_{}'.format(period), 'pred']].dropna()
-
+test = test[['pct_change', 'Volume', 'MACDDiff_15_26', 'SOk', 'RSI_{}'.format(period), 'pred']].dropna()
+'''
 split_ix = int(test.shape[0] * 0.7)
 
 #test = test[['Close']].dropna()
 
 test.iloc[:split_ix].to_csv('../../data/train/{}.csv'.format(set_name), index=False)
 test.iloc[split_ix:].to_csv('../../data/test/{}.csv'.format(set_name), index=False)
+'''

@@ -5,7 +5,7 @@
 #include "FinTimeSeriesEvalOp.h"
 
 FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual) {
-    return evaluate(individual, this->dataset);
+    return evaluate(individual, this->dataset, 4);
 }
 
 bool FinTimeSeriesEvalOp::initialize(StateP state) {
@@ -67,6 +67,7 @@ bool FinTimeSeriesEvalOp::initialize(StateP state) {
     filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
 
     startBalance = *((double *) state->getRegistry()->getEntry("data.balance").get());
+    threshold = *((double *) state->getRegistry()->getEntry("fuzzy.threshold").get());
 
     this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
 
@@ -141,7 +142,7 @@ vector<shared_ptr<Rule>> FinTimeSeriesEvalOp::genotypeToRules(IndividualP indivi
     return rules;
 }
 
-FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset) {
+FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset, int numSplits) {
     FitnessP fitness(new FitnessMax);
     const double START_BALANCE = startBalance;
 
@@ -160,7 +161,11 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
     unsigned int shortPosition = 0;
     unsigned int longPosition = 0;
 
-    for (auto i=0; i<dataset->getNumRows(); i++) {
+    this->counter = (this->counter+1) % (numSplits * 5000);
+    int size = dataset->getNumRows() / numSplits;
+    auto currentSplit = this->counter/5000;
+
+    for (auto i=size * currentSplit; i < size*(currentSplit+1) && i < dataset->getNumRows(); i++) {
         auto row = dataset->dataset.at(i);
         for (auto i = 0; i < row->values.size() - 1; i++) {
             knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);
@@ -192,28 +197,29 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
 
         //cout << "BUY: " << conclusionBuy << "; SELL: " << conclusionSell << endl;
 
-
-        if (conclusionSell > 0.5) {
-            timeSold.push_back(i);
-            balance += row->values.back();
-            if (longPosition > 0) {
-                longPosition--;
-            } else {
-                shortPosition++;
+        if (conclusionBuy >= conclusionSell) {
+            if (conclusionBuy > this->threshold && balance > row->values.back()) {
+                timeBought.push_back(i);
+                if (shortPosition > 0) {
+                    shortPosition--;
+                    balance -= row->values.back()*1.5;
+                } else {
+                    longPosition++;
+                    balance -= row->values.back();
+                }
+                balance -= 0.002*row->values.back();
             }
-            balance -= 0.002 * row->values.back();
-        }
-
-        if (conclusionBuy > 0.5 && balance > row->values.back()) {
-            timeBought.push_back(i);
-            if (shortPosition > 0) {
-                shortPosition--;
-                balance -= row->values.back()*1.5;
-            } else {
-                longPosition++;
-                balance -= row->values.back();
+        } else {
+            if (conclusionSell > this->threshold) {
+                timeSold.push_back(i);
+                balance += row->values.back();
+                if (longPosition > 0) {
+                    longPosition--;
+                } else {
+                    shortPosition++;
+                }
+                balance -= 0.002 * row->values.back();
             }
-            balance -= 0.002*row->values.back();
         }
 
     }
@@ -254,4 +260,6 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
 void FinTimeSeriesEvalOp::registerParameters(StateP state) {
     ClassifierFTSEvalOp::registerParameters(state);
     state->getRegistry()->registerEntry("data.balance", (voidP) (new double(1)), ECF::DOUBLE);
+    state->getRegistry()->registerEntry("fuzzy.threshold", (voidP) (new double(0.8)), ECF::DOUBLE);
+
 }

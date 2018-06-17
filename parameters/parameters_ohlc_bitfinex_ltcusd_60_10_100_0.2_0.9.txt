@@ -1,0 +1,43 @@
+<ECF>
+	<Algorithm>
+		<SteadyStateTournament>
+			<Entry key="tsize">3</Entry>
+		</SteadyStateTournament>
+	</Algorithm>
+	<Genotype>
+		<FloatingPoint>
+			<Entry key="lbound">0</Entry>
+			<Entry key="ubound">6.99</Entry>
+			<Entry key="dimension">20</Entry>
+		</FloatingPoint>
+		<FloatingPoint>
+            <Entry key="lbound">0</Entry>
+            <Entry key="ubound">1</Entry>
+            <Entry key="dimension">2</Entry>
+        </FloatingPoint>
+	</Genotype>
+	<Registry>
+        <Entry key="batch.repeats">10</Entry> 
+        <Entry key="batch.singlemilestone">1</Entry> 
+        <Entry key="batch.statsfile">stats/ohlc_bitfinex_ltcusd_60_10_100_0.2_0.9.csv</Entry> 
+
+	    <Entry key="data.input">data/train/ohlc_bitfinex_ltcusd_60.csv</Entry>
+	    <Entry key="data.test">data/test/ohlc_bitfinex_ltcusd_60.csv</Entry>
+	    <Entry key="data.balance">1614.91037819</Entry>
+	    <Entry key="operator.logfile">log/ohlc_bitfinex_ltcusd_60_10_100_0.2_0.9.csv</Entry>
+
+	    <Entry key="fuzzy.langvars">conf/ohlc_bitfinex_ltcusd_60.conf</Entry>
+	    <Entry key="fuzzy.numrules">10</Entry>
+        <Entry key="fuzzy.threshold">0.9</Entry>
+
+		<Entry key="population.size">100</Entry>
+		<Entry key="mutation.indprob">0.2</Entry>
+
+        <Entry key="milestone.filename">milestones/ohlc_bitfinex_ltcusd_60_10_100_0.2_0.9.txt</Entry>
+
+		<Entry key="term.eval">500000</Entry>
+		<Entry key="log.frequency">10</Entry>
+		<Entry key="log.level">3</Entry>
+
+	</Registry>
+</ECF>

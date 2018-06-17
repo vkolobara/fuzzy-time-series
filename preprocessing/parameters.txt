@@ -17,6 +17,10 @@
         </FloatingPoint>
 	</Genotype>
 	<Registry>
+        <Entry key="batch.repeats">5</Entry> 
+        <Entry key="batch.singlemilestone">1</Entry> 
+        <Entry key="batch.statsfile"></Entry> 
+
 	    <Entry key="data.input"></Entry>
 	    <Entry key="data.test"></Entry>
 	    <Entry key="data.balance"></Entry>
@@ -24,13 +28,14 @@
 
 	    <Entry key="fuzzy.langvars"></Entry>
 	    <Entry key="fuzzy.numrules"></Entry>
+        <Entry key="fuzzy.threshold"></Entry>
 
 		<Entry key="population.size"></Entry>
 		<Entry key="mutation.indprob"></Entry>
 
         <Entry key="milestone.filename"></Entry>
 
-		<Entry key="term.eval">100000</Entry>
+		<Entry key="term.eval">300000</Entry>
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>
 

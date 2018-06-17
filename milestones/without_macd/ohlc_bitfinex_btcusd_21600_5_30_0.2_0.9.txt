@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ECF milestone="Sun Jun 17 15:28:29 2018
+">
+	<Registry>
+		<Entry key="1FloatingPoint.dimension">10</Entry>
+		<Entry key="1FloatingPoint.lbound">0</Entry>
+		<Entry key="1FloatingPoint.ubound">1</Entry>
+		<Entry key="FloatingPoint.dimension">20</Entry>
+		<Entry key="FloatingPoint.lbound">0</Entry>
+		<Entry key="FloatingPoint.ubound">6.99</Entry>
+		<Entry key="SteadyStateTournament.tsize">3</Entry>
+		<Entry key="batch.logfile_">*</Entry>
+		<Entry key="batch.remaining_">0</Entry>
+		<Entry key="batch.repeats">5</Entry>
+		<Entry key="batch.singlemilestone">1</Entry>
+		<Entry key="batch.statsfile">stats/ohlc_bitfinex_btcusd_21600_5_30_0.2_0.9.csv</Entry>
+		<Entry key="data.balance">103779</Entry>
+		<Entry key="data.input">data/train/ohlc_bitfinex_btcusd_21600.csv</Entry>
+		<Entry key="data.test">data/test/ohlc_bitfinex_btcusd_21600.csv</Entry>
+		<Entry key="fuzzy.langvars">conf/ohlc_bitfinex_btcusd_21600.conf</Entry>
+		<Entry key="fuzzy.numrules">5</Entry>
+		<Entry key="fuzzy.threshold">0.9</Entry>
+		<Entry key="log.frequency">10</Entry>
+		<Entry key="log.level">3</Entry>
+		<Entry key="milestone.elapsedtime_">20</Entry>
+		<Entry key="milestone.filename">milestones/ohlc_bitfinex_btcusd_21600_5_30_0.2_0.9.txt</Entry>
+		<Entry key="milestone.generation_">9999</Entry>
+		<Entry key="mutation.indprob">0.2</Entry>
+		<Entry key="operator.logfile">log/ohlc_bitfinex_btcusd_21600_5_30_0.2_0.9.csv</Entry>
+		<Entry key="population.size">30</Entry>
+		<Entry key="term.eval">300000</Entry>
+	</Registry>
+	<Population size="1">
+		<HallOfFame size="1">
+			<Individual size="2" gen="2419">
+				<FitnessMax value="1.19796"/>
+				<FloatingPoint size="20">	3.37668	2.50932	3.78292	3.64887	3.38278	2.62243	2.15933	2.07601	3.44682	1.50206	3.69396	3.4422	3.80811	0.823239	3.95647	3.53463	3.46143	1.73408	3.27774	3.78308</FloatingPoint>
+				<FloatingPoint size="10">	0.536654	0.467339	0.436013	0.969122	0.864643	0.785001	0.464855	0.740171	0.890824	0.924116</FloatingPoint>
+			</Individual>
+		</HallOfFame>
+		<Deme size="30">
+			<HallOfFame size="1">
+				<Individual size="2" gen="2419">
+					<FitnessMax value="1.19796"/>
+					<FloatingPoint size="20">	3.37668	2.50932	3.78292	3.64887	3.38278	2.62243	2.15933	2.07601	3.44682	1.50206	3.69396	3.4422	3.80811	0.823239	3.95647	3.53463	3.46143	1.73408	3.27774	3.78308</FloatingPoint>
+					<FloatingPoint size="10">	0.536654	0.467339	0.436013	0.969122	0.864643	0.785001	0.464855	0.740171	0.890824	0.924116</FloatingPoint>
+				</Individual>
+			</HallOfFame>
+			<Individual size="2">
+				<FitnessMax value="1.05543"/>
+				<FloatingPoint size="20">	3.45915	0.448305	3.88392	3.84907	3.43498	2.60976	2.3411	2.16119	3.41572	1.52932	3.59333	3.45917	3.51185	0.744512	3.7236	3.56911	3.54015	1.68928	3.77361	3.62985</FloatingPoint>
+				<FloatingPoint size="10">	0.513482	0.77299	0.233491	0.969227	0.827732	0.784237	0.0699998	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.1888"/>
+				<FloatingPoint size="20">	3.45915	2.33869	3.88406	3.85175	3.10506	2.63074	2.3411	2.14411	3.35176	1.52936	3.59332	3.45261	3.51187	0.744518	3.71925	3.56911	3.60193	1.70899	3.74005	3.70744</FloatingPoint>
+				<FloatingPoint size="10">	0.407156	0.797361	0.306404	0.966778	0.827759	0.784237	0.145472	0.174847	0.890738	0.655029</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="0.967494"/>
+				<FloatingPoint size="20">	3.45915	2.33875	3.88392	3.84901	3.3129	2.60994	2.3411	2.15885	3.41152	1.52932	3.59333	3.46009	3.51186	3.93173	3.72467	3.56911	3.5407	1.68966	3.77363	3.65368</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771794	0.225471	0.968381	0.827732	0.784237	0.0714652	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84921	3.85438	2.60685	2.3411	2.16264	3.3775	1.52932	3.59333	3.46003	3.51185	0.744575	3.7231	3.56911	3.53952	1.68722	3.7741	3.64937</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771357	0.241368	0.969338	0.827732	0.784237	0.069259	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.0165"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84918	3.76271	2.60902	2.3411	2.15905	3.4115	1.52932	3.59333	3.45935	3.51183	0.74454	3.72224	3.56911	3.53643	1.68796	3.77408	1.32294</FloatingPoint>
+				<FloatingPoint size="10">	0.388491	0.771983	0.228943	0.968349	0.827732	0.784237	0.0741029	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84918	3.76271	2.60902	2.3411	2.15905	3.4115	1.52932	3.59333	3.45935	3.51183	0.74454	3.72224	3.56911	3.53643	1.68796	3.77408	3.61428</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771855	0.232174	0.968418	0.827732	0.784237	0.0717242	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84921	3.85438	2.60685	2.3411	2.16264	3.3775	1.52932	3.59333	3.46003	3.51185	0.744575	3.7231	3.56911	3.53952	1.68722	3.7741	3.64937</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771484	0.238347	0.968838	0.827732	0.784237	0.0600075	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88392	3.84907	3.43498	2.60976	2.3411	2.16119	3.41572	1.52932	3.59333	3.45917	3.51185	0.744512	3.7236	3.56911	3.54015	1.68928	3.77361	3.62985</FloatingPoint>
+				<FloatingPoint size="10">	0.387705	0.771437	0.233491	0.969227	0.827732	0.784237	0.0699998	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33875	3.88392	3.84901	3.3129	2.60994	2.3411	2.15885	3.41152	1.52932	3.59333	3.46009	3.51186	0.744516	3.72467	3.56911	3.5407	1.68966	3.77363	3.65368</FloatingPoint>
+				<FloatingPoint size="10">	0.388491	0.771578	0.218645	0.96831	0.827732	0.784237	0.0709064	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.10695"/>
+				<FloatingPoint size="20">	3.45915	2.33877	3.88391	3.84921	3.8988	2.60358	2.3411	2.16465	3.35176	1.52931	3.59332	3.4608	3.51178	0.744514	3.71914	3.56911	3.53228	1.68343	3.77526	3.571</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771437	0.233491	0.969227	0.827732	0.784237	0.0699998	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.05666"/>
+				<FloatingPoint size="20">	3.45915	2.33875	3.88392	3.84901	3.3129	5.55685	2.3411	2.15885	3.41152	1.52932	3.59333	3.46009	3.51186	0.744516	3.72467	3.56911	3.5407	1.68966	3.77363	3.65368</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771768	0.231235	0.968944	0.827732	0.784237	0.0727516	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84916	3.68705	2.60489	2.3411	2.16206	3.44163	1.52931	3.59333	3.45943	3.5118	0.744565	3.72043	3.56911	3.53392	1.68642	3.7745	3.60472</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771357	0.241368	0.969338	0.827732	0.784237	0.069259	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.20971	3.88392	3.84907	3.43498	2.60976	2.3411	2.16119	3.41572	1.52932	3.59333	3.45917	3.51185	0.744512	3.7236	3.56911	3.54015	1.68928	3.77361	3.62985</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771495	0.226123	0.969222	0.827732	0.784237	0.0698276	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84912	3.60297	2.60828	2.3411	2.16088	3.3933	1.52932	3.59333	3.46006	3.51185	0.744548	3.72383	3.56911	3.54007	1.68835	3.77388	3.65137</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771357	0.241368	0.969309	0.827732	0.784237	0.0691883	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33875	3.88405	3.84922	3.50842	2.61002	2.3411	2.1576	3.38467	1.52933	3.59333	3.45436	3.51186	0.744539	3.72107	3.56911	3.55207	1.70895	3.75177	3.65009</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771357	0.241368	0.969309	0.827732	0.784237	0.0691883	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33877	3.88391	3.84921	3.8988	2.60358	2.3411	2.16465	3.35176	1.52931	3.59332	3.4608	3.51178	0.744514	3.71914	3.56911	3.53228	1.68343	3.77526	3.571</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771437	0.233491	0.969227	0.827732	0.784237	0.0699998	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.06189"/>
+				<FloatingPoint size="20">	1.13289	2.33876	3.88391	3.84916	3.68705	2.60489	2.3411	2.16206	3.44163	1.52931	3.59333	3.45943	3.5118	0.744565	3.72043	3.56911	3.53392	1.68642	3.7745	3.60472</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771437	0.233491	0.969227	0.827732	0.784237	0.0699236	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84921	3.80189	2.60657	2.3411	2.15936	3.41152	1.52932	3.59333	3.46009	3.51186	0.744516	3.72467	3.56911	3.5407	1.68966	3.77363	3.65368</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771652	0.225726	0.96901	0.827732	0.784237	0.202974	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33875	3.88392	3.84901	3.3129	2.60994	2.3411	2.15885	3.41152	1.52932	3.59333	3.46009	3.51186	0.744516	3.72467	3.56911	3.5407	1.68966	3.77363	3.65368</FloatingPoint>
+				<FloatingPoint size="10">	0.388491	0.771446	0.233491	0.969227	0.827732	0.784237	0.0699998	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88392	3.84907	3.43498	2.60976	2.3411	2.16119	3.41572	1.52932	3.59333	3.45917	3.51185	0.744512	3.7236	3.56911	3.54015	1.68928	3.77361	3.62985</FloatingPoint>
+				<FloatingPoint size="10">	0.387705	0.771437	0.233491	0.969227	0.827732	0.784237	0.0699998	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84918	3.76271	2.60902	2.3411	2.15905	3.4115	1.52932	3.59333	3.45935	3.51183	0.74454	3.72224	3.56911	3.53643	1.68796	3.77408	3.61428</FloatingPoint>
+				<FloatingPoint size="10">	0.388491	0.771983	0.228943	0.968349	0.827732	0.784237	0.0741029	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84921	3.85438	2.60685	2.3411	2.16264	3.3775	1.52932	3.59333	3.46003	3.51185	0.744575	3.7231	3.56911	3.53952	1.68722	3.7741	3.64937</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771357	0.241368	0.969309	0.827732	0.784237	0.0691883	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84918	3.63743	2.60736	2.3411	2.16219	3.39303	1.52932	3.59333	3.45942	3.51183	0.744542	3.72339	3.56911	3.53893	1.68823	3.77385	3.62923</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771357	0.241368	0.969309	0.827732	0.784237	0.0691883	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.05318"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84921	3.85438	2.60685	2.3411	2.16264	3.3775	1.52932	3.59333	3.46003	3.51185	0.744575	3.7231	3.56911	3.53952	1.68722	3.7741	3.64937</FloatingPoint>
+				<FloatingPoint size="10">	0.407156	0.797361	0.306404	0.966778	0.827759	0.784237	0.145472	0.174847	0.277506	0.655029</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84915	3.52807	2.60619	2.3411	2.16181	3.42099	1.52932	3.59333	3.45911	3.51181	0.744549	3.72136	3.56911	3.53645	1.68796	3.77418	3.60658</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771357	0.241368	0.969338	0.827732	0.784237	0.069259	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33875	3.88392	3.84901	3.3129	2.60994	2.3411	2.15885	3.41152	1.52932	3.59333	3.46009	3.51186	0.744516	3.72467	3.56911	3.5407	1.68966	3.77363	3.65368</FloatingPoint>
+				<FloatingPoint size="10">	0.388491	0.771437	0.233491	0.969227	0.827732	0.784237	0.0699998	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33875	3.88405	3.84922	3.50842	2.61002	2.3411	2.1576	3.38467	1.52933	3.59333	3.45436	3.51186	0.744539	3.72107	3.56911	3.55207	1.70895	3.75177	3.65009</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771357	0.241368	0.969309	0.827732	0.784237	0.0691883	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84912	3.38556	2.60398	2.3411	2.16269	3.36928	1.52931	3.59332	3.46007	3.5118	0.744514	3.71971	3.56911	3.53376	1.68602	3.77466	3.59183</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.771713	0.174251	0.967858	0.827732	0.784237	0.0741869	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88392	3.84907	3.641	2.60659	2.3411	2.16153	3.44912	1.52932	3.59333	3.45949	3.51181	0.744515	3.7218	3.56911	3.54022	1.68951	3.77392	3.6084</FloatingPoint>
+				<FloatingPoint size="10">	0.387706	0.772212	0.1601	0.96901	0.827732	0.784237	0.0821749	0.719509	0.890666	0.925094</FloatingPoint>
+			</Individual>
+			<Individual size="2">
+				<FitnessMax value="1.07316"/>
+				<FloatingPoint size="20">	3.45915	2.33876	3.88391	3.84921	3.80189	2.60657	2.3411	2.15936	3.41152	1.52932	3.59333	3.46009	3.51186	0.744516	3.72467	3.56911	3.5407	1.68966	3.77363	3.6505</FloatingPoint>
+				<FloatingPoint size="10">	0.388491	0.771983	0.228943	0.968349	0.827732	0.784237	0.0741029	0.71951	0.890666	0.925094</FloatingPoint>
+			</Individual>
+		</Deme>
+	</Population>
+</ECF>

@@ -15,7 +15,7 @@ bool FinancialLoggingOperator::operate(StateP state) {
         auto dataset = evalOp->dataset;
         auto testDataset = evalOp->testDataset;
 
-        evalOp->fileLogger->log(state->getGenerationNo(), bestIndividual->getFitness()->getValue(), evalOp->evaluate(bestIndividual, testDataset)->getValue());
+        evalOp->fileLogger->log(state->getGenerationNo(), bestIndividual->getFitness()->getValue(), evalOp->evaluate(bestIndividual, testDataset, 1)->getValue());
     }
 
     return true;
