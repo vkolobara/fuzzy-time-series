@@ -18,7 +18,7 @@ public:
 
     FitnessP evaluate(IndividualP individual) override;
 
-    FitnessP evaluate(IndividualP individual, shared_ptr<Dataset> dataset, int numSplits);
+    FitnessP evaluate(IndividualP individual, shared_ptr<Dataset> dataset, int currentSplit, int numSplits, bool train);
 
     bool initialize(StateP p) override;
 

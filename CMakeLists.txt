@@ -16,11 +16,14 @@ set(SOURCE_FILES
 add_subdirectory(lib/ECF)
 add_subdirectory(lib/fuzzy-inference-system)
 
-add_executable(fts-regression src/regression/RegressionFTSEvalOp.cpp
+add_executable(fts-regression
+        src/regression/RegressionFTSEvalOp.cpp
         src/regression/RegressionFTSEvalOp.h
+        src/regression/Regression2FTSEvalOp.cpp
+        src/regression/Regression2FTSEvalOp.h
         src/regression/RegressionLoggingOperator.cpp
         src/regression/RegressionLoggingOperator.h
-        src/regression/main_regression.cpp ${SOURCE_FILES})
+        src/regression/main_regression.cpp ${SOURCE_FILES} src/regression/RegressionRules.cpp src/regression/RegressionRules.h)
 
 add_executable(fts-classification src/classification/main_classification.cpp
         src/classification/ClassificationLoggingOperator.cpp

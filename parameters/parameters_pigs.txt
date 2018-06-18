@@ -21,6 +21,7 @@
 	    <Entry key="data.input">data/train/pigs.csv</Entry>
         <Entry key="data.test">data/test/pigs.csv</Entry>
 
+        <Entry key="regression.rules">pigs_rule_1.txt</Entry>
 	    <Entry key="fuzzy.langvars">conf/pigs.conf</Entry>
 	    <Entry key="fuzzy.numrules">20</Entry>
 

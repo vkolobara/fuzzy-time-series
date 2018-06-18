@@ -76,4 +76,4 @@ print(len(dct))
 
 with open('pigs_rule_1.txt', 'w') as f:
     for k in dct:
-        f.write(str(k) + ":" + str(dct[k]) + "\n")
+        f.write(str(k) + "->" + ",".join([str(x) for x in dct[k]]) + "\n")

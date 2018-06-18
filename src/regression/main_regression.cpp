@@ -4,13 +4,12 @@
 
 #include <ECF/ECF.h>
 #include "../classification/ClassifierFTSEvalOp.h"
-#include "RegressionLoggingOperator.h"
-#include "RegressionFTSEvalOp.h"
+#include "Regression2FTSEvalOp.h"
 
 int main(int argc, char **argv) {
     StateP state (new State);
-    state->setEvalOp((RegressionFTSEvalOpP) new RegressionFTSEvalOp);
-    state->addOperator((RegressionLoggingOperatorP) new RegressionLoggingOperator);
+    state->setEvalOp((Regression2FTSEvalOpP) new Regression2FTSEvalOp);
+    //state->addOperator((RegressionLoggingOperatorP) new RegressionLoggingOperator);
 
     state->initialize(argc, argv);
 

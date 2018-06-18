@@ -17,13 +17,13 @@
         </FloatingPoint>
 	</Genotype>
 	<Registry>
-        <Entry key="batch.repeats">10</Entry> 
+        <Entry key="batch.repeats">1</Entry> 
         <Entry key="batch.singlemilestone">1</Entry> 
         <Entry key="batch.statsfile">stats/ohlc_bitfinex_btcusd_60_5_100_0.2_0.7.csv</Entry> 
 
 	    <Entry key="data.input">data/train/ohlc_bitfinex_btcusd_60.csv</Entry>
 	    <Entry key="data.test">data/test/ohlc_bitfinex_btcusd_60.csv</Entry>
-	    <Entry key="data.balance">88422.2049816</Entry>
+	    <Entry key="data.balance">85918.6521152</Entry>
 	    <Entry key="operator.logfile">log/ohlc_bitfinex_btcusd_60_5_100_0.2_0.7.csv</Entry>
 
 	    <Entry key="fuzzy.langvars">conf/ohlc_bitfinex_btcusd_60.conf</Entry>
@@ -35,7 +35,7 @@
 
         <Entry key="milestone.filename">milestones/ohlc_bitfinex_btcusd_60_5_100_0.2_0.7.txt</Entry>
 
-		<Entry key="term.eval">500000</Entry>
+		<Entry key="term.eval">300000</Entry>
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>
 

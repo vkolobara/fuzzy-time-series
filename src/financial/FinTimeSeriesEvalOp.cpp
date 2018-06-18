@@ -5,7 +5,12 @@
 #include "FinTimeSeriesEvalOp.h"
 
 FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual) {
-    return evaluate(individual, this->dataset, 4);
+    auto numSplits = 5;
+
+    this->counter = (this->counter+1) % (numSplits * 60000);
+    auto currentSplit = this->counter/60000 % numSplits;
+
+    return evaluate(individual, this->dataset, currentSplit, numSplits, true);
 }
 
 bool FinTimeSeriesEvalOp::initialize(StateP state) {
@@ -71,10 +76,9 @@ bool FinTimeSeriesEvalOp::initialize(StateP state) {
 
     this->dataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
 
-    sptr = state->getRegistry()->getEntry("data.test"); // get parameter value
-    filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
-    this->testDataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
-
+    //sptr = state->getRegistry()->getEntry("data.test"); // get parameter value
+    //filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
+    //this->testDataset = shared_ptr<Dataset>(Dataset::parseFile(filePath));
 
 
     sptr = state->getRegistry()->getEntry("fuzzy.numrules");
@@ -142,7 +146,7 @@ vector<shared_ptr<Rule>> FinTimeSeriesEvalOp::genotypeToRules(IndividualP indivi
     return rules;
 }
 
-FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset, int numSplits) {
+FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset, int currentSplit, int numSplits, bool train) {
     FitnessP fitness(new FitnessMax);
     const double START_BALANCE = startBalance;
 
@@ -161,11 +165,16 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
     unsigned int shortPosition = 0;
     unsigned int longPosition = 0;
 
-    this->counter = (this->counter+1) % (numSplits * 5000);
     int size = dataset->getNumRows() / numSplits;
-    auto currentSplit = this->counter/5000;
 
-    for (auto i=size * currentSplit; i < size*(currentSplit+1) && i < dataset->getNumRows(); i++) {
+    for (auto i=0; i < dataset->getNumRows(); i++) {
+        if (train && i >= size * currentSplit && i <= size * (currentSplit+1)) {
+            i+=size;
+            continue;
+        } else if (!train && (i <= size * currentSplit || i >= size*(currentSplit+1))) {
+            i+=size;
+            continue;
+        }
         auto row = dataset->dataset.at(i);
         for (auto i = 0; i < row->values.size() - 1; i++) {
             knowledgeBase->getVariable(variableNames[i])->value = row->values.at(i);

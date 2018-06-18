@@ -17,7 +17,7 @@
         </FloatingPoint>
 	</Genotype>
 	<Registry>
-        <Entry key="batch.repeats">5</Entry> 
+        <Entry key="batch.repeats">1</Entry> 
         <Entry key="batch.singlemilestone">1</Entry> 
         <Entry key="batch.statsfile"></Entry> 
 

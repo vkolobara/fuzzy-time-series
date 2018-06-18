@@ -1,0 +1,34 @@
+<ECF>
+	<Algorithm>
+		<SteadyStateTournament>
+			<Entry key="tsize">3</Entry>
+		</SteadyStateTournament>
+	</Algorithm>
+	<Genotype>
+		<FloatingPoint>
+			<Entry key="lbound">-1</Entry>
+			<Entry key="ubound">1</Entry>
+			<Entry key="dimension">20</Entry>
+		</FloatingPoint>
+	</Genotype>
+	<Registry>
+	    <Entry key="operator.logfile">log/pigs2.log</Entry>
+        
+	    <Entry key="data.input">data/train/pigs.csv</Entry>
+        <Entry key="data.test">data/test/pigs.csv</Entry>
+
+        <Entry key="regression.rules">pigs_rule_1.txt</Entry>
+	    <Entry key="fuzzy.langvars">conf/pigs.conf</Entry>
+	    <Entry key="fuzzy.numrules">20</Entry>
+
+		<Entry key="population.size">50</Entry>
+		<Entry key="mutation.indprob">0.3</Entry>
+		<Entry key="term.eval">1000000</Entry>
+
+		<Entry key="log.frequency">10</Entry>
+		<Entry key="log.level">3</Entry>
+
+        <Entry key="milestone.filename">milestones/pigs2.txt</Entry>
+
+	</Registry>
+</ECF>
