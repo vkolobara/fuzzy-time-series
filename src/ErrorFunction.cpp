@@ -14,6 +14,9 @@ std::string MeanSquaredError::getName() {
 }
 
 double MeanAbsolutePercentageError::error(double real, double pred) {
+    if (std::abs(real - pred) > real) {
+        return 1;
+    }
     return std::abs((real - pred) / real);
 }
 

@@ -151,7 +151,7 @@ FitnessP Regression2FTSEvalOp::evaluate(IndividualP individual, shared_ptr<Datas
             auto conclusion = consequent->membership();
             if (activation >= bestAct) {
                 bestAct = activation;
-                conc = conclusion;
+                conc = conclusion/consequent->w.size();
             }
         }
 

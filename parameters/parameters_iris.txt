@@ -17,7 +17,7 @@
         </FloatingPoint>
 	</Genotype>
 	<Registry>
-	    <Entry key="operator.logfile">log/iris.log</Entry>
+	    <Entry key="operator.logfile">log/iris_10.log</Entry>
 	    <Entry key="data.input">data/train/iris.csv</Entry>
 	    <Entry key="data.test">data/test/iris.csv</Entry>
 
@@ -25,11 +25,11 @@
 	    <Entry key="fuzzy.numrules">10</Entry>
 		<Entry key="population.size">100</Entry>
 		<Entry key="mutation.indprob">0.3</Entry>
-		<Entry key="term.eval">100000</Entry>
+		<Entry key="term.eval">1000000</Entry>
 
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>
 
-		<Entry key="milestone.filename">milestones/iris.txt</Entry>
+		<Entry key="milestone.filename">milestones/iris_10.txt</Entry>
 	</Registry>
 </ECF>

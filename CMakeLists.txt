@@ -21,6 +21,8 @@ add_executable(fts-regression
         src/regression/RegressionFTSEvalOp.h
         src/regression/Regression2FTSEvalOp.cpp
         src/regression/Regression2FTSEvalOp.h
+        src/regression/Regression2LoggingOperator.cpp
+        src/regression/RegressionLoggingOperator.h
         src/regression/RegressionLoggingOperator.cpp
         src/regression/RegressionLoggingOperator.h
         src/regression/main_regression.cpp ${SOURCE_FILES} src/regression/RegressionRules.cpp src/regression/RegressionRules.h)
@@ -31,7 +33,7 @@ add_executable(fts-classification src/classification/main_classification.cpp
 
 add_executable(fts-financial src/financial/main_financial.cpp
         src/financial/FinTimeSeriesEvalOp.cpp src/financial/FinTimeSeriesEvalOp.h
-        src/financial/FinancialLoggingOperator.cpp
+        src/financial/Regression2LoggingOperator.cpp
         src/financial/FinancialLoggingOperator.h ${SOURCE_FILES})
 
 add_executable(fts-anfis src/anfis/main_anfis.cpp src/anfis/ANFISEvalOp.cpp src/anfis/ANFISEvalOp.h src/anfis/main_anfis.cpp

@@ -8,7 +8,7 @@
 
 #include <ECF/ECF.h>
 
-class FinancialLoggingOperator : public Operator {
+class FinancialLoggingOperator: public Operator {
 public:
     bool operate(StateP p) override;
 };
