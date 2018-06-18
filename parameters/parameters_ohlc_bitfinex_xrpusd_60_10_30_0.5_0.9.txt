@@ -38,6 +38,7 @@
 		<Entry key="term.eval">300000</Entry>
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>
+        <Entry key="term.maxtime">1800</Entry>
 
 	</Registry>
 </ECF>

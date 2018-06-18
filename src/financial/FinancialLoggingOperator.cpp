@@ -16,7 +16,7 @@ bool FinancialLoggingOperator::operate(StateP state) {
         auto testDataset = evalOp->testDataset;
 
         auto numSplits = 5;
-        auto currentSplit = evalOp->counter/60000 % numSplits;
+        auto currentSplit = evalOp->counter/10000 % numSplits;
 
         evalOp->fileLogger->log(state->getGenerationNo(), bestIndividual->getFitness()->getValue(), evalOp->evaluate(bestIndividual, dataset, currentSplit, numSplits, false)->getValue());
     }

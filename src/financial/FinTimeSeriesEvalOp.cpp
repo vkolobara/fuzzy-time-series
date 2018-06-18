@@ -7,8 +7,8 @@
 FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual) {
     auto numSplits = 5;
 
-    this->counter = (this->counter+1) % (numSplits * 60000);
-    auto currentSplit = this->counter/60000 % numSplits;
+    this->counter = (this->counter+1) % (numSplits * 10000);
+    auto currentSplit = this->counter/10000 % numSplits;
 
     return evaluate(individual, this->dataset, currentSplit, numSplits, true);
 }
