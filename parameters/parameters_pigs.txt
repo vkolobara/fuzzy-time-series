@@ -12,11 +12,11 @@
 		</FloatingPoint>
 	</Genotype>
 	<Registry>
-	    <Entry key="population.demes">10</Entry>
+	    <Entry key="population.demes">20</Entry>
 	    <Entry key="migration.freq">10</Entry>
         <Entry key="migration.number">5</Entry>
 
-	    <Entry key="operator.logfile">log/pigs.log</Entry>
+	    <Entry key="operator.logfile">log/pigs_20.log</Entry>
         
 	    <Entry key="data.input">data/train/pigs.csv</Entry>
         <Entry key="data.test">data/test/pigs.csv</Entry>
@@ -32,7 +32,7 @@
 		<Entry key="log.frequency">10</Entry>
 		<Entry key="log.level">3</Entry>
 
-        <Entry key="milestone.filename">milestones/pigs.txt</Entry>
+        <Entry key="milestone.filename">milestones/pigs_20.txt</Entry>
 
 	</Registry>
 </ECF>

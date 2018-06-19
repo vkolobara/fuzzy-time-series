@@ -12,24 +12,24 @@ import os
 
 curr_max = 0
 best = ''
+data = []
 
 for file in os.listdir('log'):
-    if '.csv' not in file:
+    if '.csv' not in file or 'iotusd' not in file:
         continue
     df = pd.read_csv(os.path.join('log', file), index_col=False)['Test']
     df_t = pd.read_csv(os.path.join('log', file), index_col=False)['Train']
     
-    df1 = df.iloc[:600]
-    df2 = df.iloc[600:1200]
-    df3 = df.iloc[1200:1800]
-    df4 = df.iloc[1800:2400]
-    df5 = df.iloc[2400:]
-    
-    mn = sum([df1.max(), df2.max(), df3.max(), df4.max(), df5.max()]) / 5
-    mn = (mn + df_t.max())/2
+    xs = [(max(df.iloc[i-100:i]) + max(df_t.iloc[i-100:i])) / 2 for i in range(100, len(df), 100)]
+    data.append(xs)
+    mn = sum(xs) / len(xs)
+    print(mn, file)
     if mn > curr_max:
         best = file
         curr_max = mn
-        
 
+plt.xlabel('Parametri')
+plt.ylabel('Dobrota')
+plt.boxplot(data, vert=True)
+plt.savefig('parameter_selection.pdf')
     
