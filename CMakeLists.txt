@@ -27,14 +27,19 @@ add_executable(fts-regression
         src/regression/RegressionLoggingOperator.h
         src/regression/main_regression.cpp ${SOURCE_FILES} src/regression/RegressionRules.cpp src/regression/RegressionRules.h)
 
+
+add_executable(fts-regression-results
+        src/regression/Regression2FTSEvalOp.cpp
+        src/regression/Regression2FTSEvalOp.h
+        src/regression/main_results.cpp ${SOURCE_FILES} src/regression/RegressionRules.cpp src/regression/RegressionRules.h)
+
 add_executable(fts-classification src/classification/main_classification.cpp
         src/classification/ClassificationLoggingOperator.cpp
         src/classification/ClassificationLoggingOperator.h ${SOURCE_FILES})
 
 add_executable(fts-financial src/financial/main_financial.cpp
         src/financial/FinTimeSeriesEvalOp.cpp src/financial/FinTimeSeriesEvalOp.h
-        src/financial/Regression2LoggingOperator.cpp
-        src/financial/FinancialLoggingOperator.h ${SOURCE_FILES})
+        src/financial/FinancialLoggingOperator.h src/financial/FinancialLoggingOperator.cpp ${SOURCE_FILES})
 
 add_executable(fts-anfis src/anfis/main_anfis.cpp src/anfis/ANFISEvalOp.cpp src/anfis/ANFISEvalOp.h src/anfis/main_anfis.cpp
         ${SOURCE_FILES})
@@ -45,6 +50,12 @@ target_include_directories(fts-regression PRIVATE ${Boost_INCLUDE_DIR})
 
 target_link_libraries(fts-regression ECF)
 target_link_libraries(fts-regression FIS)
+
+target_include_directories(fts-regression-results PRIVATE lib/ECF)
+target_include_directories(fts-regression-results PRIVATE lib/fuzzy-inference-system)
+target_include_directories(fts-regression-results PRIVATE ${Boost_INCLUDE_DIR})
+target_link_libraries(fts-regression-results ECF)
+target_link_libraries(fts-regression-results FIS)
 
 target_include_directories(fts-classification PRIVATE lib/ECF)
 target_include_directories(fts-classification PRIVATE lib/fuzzy-inference-system)

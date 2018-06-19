@@ -9,7 +9,7 @@ Created on Sun Jun 17 11:01:37 2018
 import pandas as pd
 from matplotlib import pyplot as plt
 import os
-
+'''
 curr_max = 0
 best = ''
 data = []
@@ -32,4 +32,14 @@ plt.xlabel('Parametri')
 plt.ylabel('Dobrota')
 plt.boxplot(data, vert=True)
 plt.savefig('parameter_selection.pdf')
-    
+'''
+
+df = pd.read_csv('data/raw/pigs.csv')
+#plt.figure()
+#plt.xlabel('Vremenski korak')
+#plt.ylabel('Broj zaklanih svinja')
+#plt.plot(df['Value'])    
+#plt.savefig('pigs.pdf')
+
+BOUGHT: 20 21 23 24 27 31 38 54 82 
+SOLD: 38 134 135 140 141 146 148 153 160 274 314

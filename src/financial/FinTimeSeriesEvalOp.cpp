@@ -7,8 +7,8 @@
 FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual) {
     auto numSplits = 5;
 
-    this->counter = (this->counter+1) % (numSplits * 10000);
-    auto currentSplit = this->counter/10000 % numSplits;
+    this->counter = (this->counter + 1) % (numSplits * 10000);
+    auto currentSplit = this->counter / 10000 % numSplits;
 
     return evaluate(individual, this->dataset, currentSplit, numSplits, true);
 }
@@ -40,14 +40,14 @@ bool FinTimeSeriesEvalOp::initialize(StateP state) {
     }
 
     //get registered entry and parse the file with LanguageVariablesParser
-    if(!state->getRegistry()->isModified("data.balance")) {
+    if (!state->getRegistry()->isModified("data.balance")) {
         ECF_LOG_ERROR(state, "Error: no start balance specified! (parameter 'data.balance'");
         return false;
     }
 
     if (state->getRegistry()->isModified("operator.logfile")) {
         voidP sptr = state->getRegistry()->getEntry("operator.logfile"); // get parameter value
-        string filePath = *((std::string*) sptr.get()); // convert from voidP to user defined type
+        string filePath = *((std::string *) sptr.get()); // convert from voidP to user defined type
         this->fileLogger = make_shared<FileLogger>(filePath);
     }
 
@@ -127,26 +127,29 @@ vector<shared_ptr<Rule>> FinTimeSeriesEvalOp::genotypeToRules(IndividualP indivi
 
     vector<shared_ptr<Rule>> rules(this->numRules);
 
-    auto genotypeAntecedent = (FloatingPoint::FloatingPoint*) individual->getGenotype(0).get();
-    auto genotypeConsequent = (FloatingPoint::FloatingPoint*) individual->getGenotype(1).get();
+    auto genotypeAntecedent = (FloatingPoint::FloatingPoint *) individual->getGenotype(0).get();
+    auto genotypeConsequent = (FloatingPoint::FloatingPoint *) individual->getGenotype(1).get();
 
-    for (auto j = 0; j<this->numRules; j++) {
+    for (auto j = 0; j < this->numRules; j++) {
         auto antecedent = new Antecedent(*new Zadeh::TNorm());
         for (auto i = 0; i < this->numVars; i++) {
 
             auto var = shared_ptr<LanguageVariable>(knowledgeBase->getVariable(variableNames[i]));
-            auto term = (uint) genotypeAntecedent->realValue[j*this->numVars + i];
+            auto term = (uint) genotypeAntecedent->realValue[j * this->numVars + i];
 
             antecedent->addClause(*(new Clause(var, term)));
         }
-        auto consequent = new MultipleConstantConsequent({-1, 1}, {genotypeConsequent->realValue[2*j], genotypeConsequent->realValue[2*j+1]});
+        auto consequent = new MultipleConstantConsequent({-1, 1}, {genotypeConsequent->realValue[2 * j],
+                                                                   genotypeConsequent->realValue[2 * j + 1]});
         rules[j] = make_shared<Rule>(*antecedent, *consequent);
     }
 
     return rules;
 }
 
-FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset, int currentSplit, int numSplits, bool train) {
+FitnessP
+FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Dataset> dataset, int currentSplit, int numSplits,
+                              bool train) {
     FitnessP fitness(new FitnessMax);
     const double START_BALANCE = startBalance;
 
@@ -167,12 +170,12 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
 
     int size = dataset->getNumRows() / numSplits;
 
-    for (auto i=0; i < dataset->getNumRows(); i++) {
-        if (train && i >= size * currentSplit && i <= size * (currentSplit+1)) {
-            i+=size;
+    for (auto i = 0; i < dataset->getNumRows(); i++) {
+        if (train && i >= size * currentSplit && i <= size * (currentSplit + 1)) {
+            i += size;
             continue;
-        } else if (!train && (i <= size * currentSplit || i >= size*(currentSplit+1))) {
-            i+=size;
+        } else if (!train && (i <= size * currentSplit || i >= size * (currentSplit + 1))) {
+            i += size;
             continue;
         }
         auto row = dataset->dataset.at(i);
@@ -193,7 +196,7 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
             auto sellFactor = activation * consequent->weights[0];
             auto buyFactor = activation * consequent->weights[1];
 
-            count+=activation;
+            count += activation;
             conclusionBuy += buyFactor;
             conclusionSell += sellFactor;
 
@@ -206,29 +209,26 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
 
         //cout << "BUY: " << conclusionBuy << "; SELL: " << conclusionSell << endl;
 
-        if (conclusionBuy >= conclusionSell) {
-            if (conclusionBuy > this->threshold && balance > row->values.back()) {
-                timeBought.push_back(i);
-                if (shortPosition > 0) {
-                    shortPosition--;
-                    balance -= row->values.back()*1.5;
-                } else {
-                    longPosition++;
-                    balance -= row->values.back();
-                }
-                balance -= 0.002*row->values.back();
+        if (conclusionBuy > this->threshold && balance > row->values.back()) {
+            timeBought.push_back(i);
+            if (shortPosition > 0) {
+                shortPosition--;
+                balance -= row->values.back() * 1.5;
+            } else {
+                longPosition++;
+                balance -= row->values.back();
             }
-        } else {
-            if (conclusionSell > this->threshold) {
-                timeSold.push_back(i);
-                balance += row->values.back();
-                if (longPosition > 0) {
-                    longPosition--;
-                } else {
-                    shortPosition++;
-                }
-                balance -= 0.002 * row->values.back();
+            balance -= 0.002 * row->values.back();
+        }
+        if (conclusionSell > this->threshold) {
+            timeSold.push_back(i);
+            balance += row->values.back();
+            if (longPosition > 0) {
+                longPosition--;
+            } else {
+                shortPosition++;
             }
+            balance -= 0.002 * row->values.back();
         }
 
     }
@@ -261,7 +261,21 @@ FitnessP FinTimeSeriesEvalOp::evaluate(IndividualP individual, shared_ptr<Datase
     }
      */
 
-    fitness->setValue(balance/START_BALANCE);
+    fitness->setValue(balance / START_BALANCE);
+
+    cout << "BOUGHT: ";
+
+    for (auto b : timeBought) {
+        cout << b << " ";
+    }
+
+    cout << endl << "SOLD: ";
+
+    for (auto s : timeSold) {
+        cout << s << " ";
+    }
+
+    cout << endl << endl;
 
     return fitness;
 }

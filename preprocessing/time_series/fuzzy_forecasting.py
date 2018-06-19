@@ -73,7 +73,13 @@ print("MAPE:" + str(100*mape/(len(values)-1)))
 print("MSE:" + str(mse / (len(values) - 1) ))
 print(dct)
 print(len(dct))
+plt.plot(df['Value'])
+plt.plot(preds)
+plt.legend(['Stvarna vrijednost', 'Predvidena vrijednost'])
+plt.xlabel('Vremenski korak')
+plt.ylabel('Broj zaklanih svinja')
+plt.savefig('fuzzy_pigs.pdf')
 
-with open('pigs_rule_1.txt', 'w') as f:
-    for k in dct:
-        f.write(str(k) + "->" + ",".join([str(x) for x in dct[k]]) + "\n")
+#with open('pigs_rule_1.txt', 'w') as f:
+#    for k in dct:
+#        f.write(str(k) + "->" + ",".join([str(x) for x in dct[k]]) + "\n")

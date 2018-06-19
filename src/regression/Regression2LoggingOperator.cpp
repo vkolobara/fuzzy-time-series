@@ -2,7 +2,7 @@
 // Created by vkolobara on 6/2/18.
 //
 
-#include "Regression2LoggingOperator.h"
+#include "FinancialLoggingOperator.h"
 #include "Regression2FTSEvalOp.h"
 
 bool Regression2LoggingOperator::operate(StateP state) {

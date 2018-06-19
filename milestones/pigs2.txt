@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<ECF milestone="Mon Jun 18 20:50:57 2018
-">
+<ECF milestone="Mon Jun 18 20:50:57 2018">
+    <Genotype>
+      <FloatingPoint>
+          <Entry key="lbound">0</Entry>
+          <Entry key="ubound">5</Entry>
+          <Entry key="dimension">20</Entry>
+      </FloatingPoint>
+    </Genotype>
 	<Registry>
 		<Entry key="FloatingPoint.dimension">19</Entry>
 		<Entry key="FloatingPoint.lbound">0</Entry>
@@ -18,7 +24,7 @@
 		<Entry key="milestone.filename">milestones/pigs2.txt</Entry>
 		<Entry key="milestone.generation_">59999</Entry>
 		<Entry key="mutation.indprob">0.5</Entry>
-		<Entry key="operator.logfile">log/pigs2.log</Entry>
+		<Entry key="operator.logfile">log/pigs2_res.log</Entry>
 		<Entry key="population.size">50</Entry>
 		<Entry key="regression.rules">pigs_rule_1.txt</Entry>
 		<Entry key="term.eval">3000000</Entry>
